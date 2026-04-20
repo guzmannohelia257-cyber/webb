@@ -1,0 +1,394 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>🏢 Dashboard Taller</h1>
+      <div class="header-info">
+        <span class="user-name">{{ currentTaller?.nombre }}</span>
+        <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="welcome-section">
+      <h2>Bienvenido/a, {{ currentTaller?.nombre }}!</h2>
+      <p>{{ taller?.nombre || 'Cargando...' }} - Gestiona tu taller y operaciones</p>
+    </section>
+
+    @if (error) {
+      <div class="alert alert-error">
+        <span (click)="error = null" class="close-btn">&times;</span>
+        {{ error }}
+      </div>
+    }
+
+    @if (exito) {
+      <div class="alert alert-success">
+        <span (click)="exito = null" class="close-btn">&times;</span>
+        {{ exito }}
+      </div>
+    }
+
+    <section class="taller-info">
+      <div class="taller-card">
+        <h3>📍 Información del Taller</h3>
+        @if (taller) {
+          <div class="taller-details">
+            <div class="detail-row">
+              <span class="label">Nombre:</span>
+              <span class="value">{{ taller.nombre }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Dirección:</span>
+              <span class="value">{{ taller.direccion }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Teléfono:</span>
+              <span class="value">{{ taller.telefono }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Email:</span>
+              <span class="value">{{ taller.email }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Descripción:</span>
+              <span class="value">{{ taller.descripcion }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Estado:</span>
+              <span class="value badge" [class.activo]="taller.activo">
+                {{ taller.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Verificado:</span>
+              <span class="value badge" [class.verificado]="taller.verificado">
+                {{ taller.verificado ? '✅ Verificado' : '⏳ Pendiente' }}
+              </span>
+            </div>
+          </div>
+          <button class="btn btn-primary" (click)="abrirFormularioEdicion()">✏️ Editar Datos</button>
+        } @else {
+          <p class="loading">Cargando información del taller...</p>
+        }
+      </div>
+    </section>
+
+    <!-- Modal de Edición -->
+    @if (mostrarFormularioEdicion) {
+      <div class="modal-overlay" (click)="cerrarFormularioEdicion()">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>✏️ Editar Datos del Taller</h3>
+            <button class="close-btn" (click)="cerrarFormularioEdicion()">&times;</button>
+          </div>
+
+          <form [formGroup]="editForm" class="edit-form">
+            <div class="form-group">
+              <label>Nombre:</label>
+              <input 
+                type="text" 
+                formControlName="nombre" 
+                class="form-control"
+                placeholder="Nombre del taller"
+              />
+              @if (editForm.get('nombre')?.hasError('required') && editForm.get('nombre')?.touched) {
+                <span class="error">Nombre es requerido</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Dirección:</label>
+              <input 
+                type="text" 
+                formControlName="direccion" 
+                class="form-control"
+                placeholder="Cra 45 #123-45"
+              />
+              @if (editForm.get('direccion')?.hasError('required') && editForm.get('direccion')?.touched) {
+                <span class="error">Dirección es requerida</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Teléfono:</label>
+              <input 
+                type="tel" 
+                formControlName="telefono" 
+                class="form-control"
+                placeholder="+57 3105551234"
+              />
+              @if (editForm.get('telefono')?.hasError('required') && editForm.get('telefono')?.touched) {
+                <span class="error">Teléfono es requerido</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Email:</label>
+              <input 
+                type="email" 
+                formControlName="email" 
+                class="form-control"
+                placeholder="email@taller.com"
+              />
+              @if (editForm.get('email')?.hasError('required') && editForm.get('email')?.touched) {
+                <span class="error">Email es requerido</span>
+              }
+              @if (editForm.get('email')?.hasError('email') && editForm.get('email')?.touched) {
+                <span class="error">Email inválido</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Descripción:</label>
+              <textarea 
+                formControlName="descripcion" 
+                class="form-control"
+                rows="4"
+                placeholder="Describe los servicios de tu taller..."
+              ></textarea>
+              @if (editForm.get('descripcion')?.hasError('minlength') && editForm.get('descripcion')?.touched) {
+                <span class="error">Mínimo 10 caracteres</span>
+              }
+            </div>
+
+            <div class="form-actions">
+              <button 
+                type="button" 
+                class="btn btn-secondary"
+                (click)="cerrarFormularioEdicion()"
+                [disabled]="guardando"
+              >
+                Cancelar
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-primary"
+                (click)="guardarCambios()"
+                [disabled]="editForm.invalid || guardando"
+              >
+                @if (guardando) {
+                  <span class="spinner"></span> Guardando...
+                } @else {
+                  💾 Guardar Cambios
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+
+    <section class="stats-section">
+      <div class="stats-grid">
+        @for (stat of stats; track stat.label) {
+          <div class="stat-card">
+            <span class="stat-icon">{{ stat.icon }}</span>
+            <p class="stat-label">{{ stat.label }}</p>
+            <p class="stat-value">{{ stat.value }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Sección de Técnicos -->
+    <section class="tecnicos-section">
+      <div class="tecnicos-card">
+        <h3>👨‍🔧 Mis Técnicos</h3>
+
+        @if (errorTecnico) {
+          <div class="alert alert-error">
+            <span (click)="errorTecnico = null" class="close-btn">&times;</span>
+            {{ errorTecnico }}
+          </div>
+        }
+
+        @if (exitoTecnico) {
+          <div class="alert alert-success">
+            <span (click)="exitoTecnico = null" class="close-btn">&times;</span>
+            {{ exitoTecnico }}
+          </div>
+        }
+
+        <!-- DEBUG: mostrar cantidad de técnicos -->
+        <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
+          Técnicos cargados: {{ tecnicos.length || 0 }}
+        </div>
+
+        @if (tecnicos && tecnicos.length > 0) {
+          <div class="tecnicos-list">
+            <div class="list-header">
+              <span class="col-nombre">Nombre</span>
+              <span class="col-email">Teléfono</span>
+              <span class="col-telefono">Disponible</span>
+              <span class="col-estado">Estado</span>
+              <span class="col-acciones">Acciones</span>
+            </div>
+            @for (tecnico of tecnicos; track tecnico.id_tecnico) {
+              <div class="list-row">
+                <span class="col-nombre">{{ tecnico.nombre }}</span>
+                <span class="col-email">{{ tecnico.telefono }}</span>
+                <span class="col-telefono">
+                  <span class="badge" [class.activo]="tecnico.disponible">
+                    {{ tecnico.disponible ? '✅ Disponible' : '❌ Ocupado' }}
+                  </span>
+                </span>
+                <span class="col-estado">
+                  <span class="badge" [class.activo]="tecnico.activo">
+                    {{ tecnico.activo ? '✅ Activo' : '❌ Inactivo' }}
+                  </span>
+                </span>
+                <span class="col-acciones">
+                  <button 
+                    type="button"
+                    class="btn-icon edit"
+                    (click)="editarTecnico(tecnico)"
+                    title="Editar"
+                  >
+                    ✏️
+                  </button>
+                  <button 
+                    type="button"
+                    class="btn-icon delete"
+                    (click)="eliminarTecnico(tecnico)"
+                    title="Eliminar"
+                  >
+                    🗑️
+                  </button>
+                </span>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-state">
+            No hay técnicos registrados. <button type="button" class="link-btn" (click)="abrirFormularioTecnico()">Agregar uno ahora</button>
+          </p>
+        }
+
+        <button 
+          type="button"
+          class="btn btn-primary"
+          (click)="abrirFormularioTecnico()"
+          style="margin-top: 20px;"
+        >
+          ➕ Agregar Técnico
+        </button>
+      </div>
+    </section>
+
+    <!-- Modal de Agregar/Editar Técnico -->
+    @if (mostrarFormularioTecnico) {
+      <div class="modal-overlay" (click)="cerrarFormularioTecnico()">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>{{ tecnicoEnEdicion ? '✏️ Editar Técnico' : '➕ Agregar Técnico' }}</h3>
+            <button class="close-btn" (click)="cerrarFormularioTecnico()">&times;</button>
+          </div>
+
+          <form [formGroup]="formTecnico" class="edit-form">
+            <div class="form-group">
+              <label>Nombre:</label>
+              <input 
+                type="text" 
+                formControlName="nombre" 
+                class="form-control"
+                placeholder="Nombre completo del técnico"
+              />
+              @if (formTecnico.get('nombre')?.hasError('required') && formTecnico.get('nombre')?.touched) {
+                <span class="error">Nombre es requerido</span>
+              }
+              @if (formTecnico.get('nombre')?.hasError('minlength') && formTecnico.get('nombre')?.touched) {
+                <span class="error">Mínimo 3 caracteres</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Teléfono:</label>
+              <input 
+                type="tel" 
+                formControlName="telefono" 
+                class="form-control"
+                placeholder="+57 310555xxxx"
+              />
+              @if (formTecnico.get('telefono')?.hasError('required') && formTecnico.get('telefono')?.touched) {
+                <span class="error">Teléfono es requerido</span>
+              }
+            </div>
+
+            @if (!tecnicoEnEdicion) {
+              <div class="form-group">
+                <label>Email:</label>
+                <input 
+                  type="email" 
+                  formControlName="email" 
+                  class="form-control"
+                  placeholder="tecnico@email.com"
+                />
+                @if (formTecnico.get('email')?.hasError('required') && formTecnico.get('email')?.touched) {
+                  <span class="error">Email es requerido</span>
+                }
+                @if (formTecnico.get('email')?.hasError('email') && formTecnico.get('email')?.touched) {
+                  <span class="error">Email inválido</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label>Contraseña:</label>
+                <input 
+                  type="password" 
+                  formControlName="password" 
+                  class="form-control"
+                  placeholder="••••••••"
+                />
+                @if (formTecnico.get('password')?.hasError('required') && formTecnico.get('password')?.touched) {
+                  <span class="error">Contraseña es requerida</span>
+                }
+                @if (formTecnico.get('password')?.hasError('minlength') && formTecnico.get('password')?.touched) {
+                  <span class="error">Mínimo 8 caracteres</span>
+                }
+              </div>
+            }
+
+            <div class="form-actions">
+              <button 
+                type="button" 
+                class="btn btn-secondary"
+                (click)="cerrarFormularioTecnico()"
+                [disabled]="guardandoTecnico"
+              >
+                Cancelar
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-primary"
+                (click)="guardarTecnico()"
+                [disabled]="formTecnico.invalid || guardandoTecnico"
+              >
+                @if (guardandoTecnico) {
+                  <span class="spinner"></span> Guardando...
+                } @else {
+                  {{ tecnicoEnEdicion ? '💾 Actualizar' : '➕ Agregar' }}
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+
+    <section class="quick-actions">
+      <h3>Acciones Rápidas</h3>
+      <div class="actions-grid">
+        @for (action of quickActions; track action.action) {
+          <button 
+            class="action-card"
+            (click)="handleAction(action.action)"
+          >
+            <span class="action-icon">{{ action.icon }}</span>
+            <span class="action-label">{{ action.label }}</span>
+          </button>
+        }
+      </div>
+    </section>
+  </main>
+</div>
