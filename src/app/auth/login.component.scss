@@ -1,0 +1,243 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h1 {
+    font-size: 28px;
+    margin: 0 0 10px 0;
+    color: #333;
+  }
+
+  p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+  }
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &.alert-error {
+    background-color: #fee;
+    border-left: 4px solid #f33;
+    color: #c33;
+  }
+
+  .close-btn {
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.login-form {
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s;
+
+    &:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    &:disabled {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+    }
+  }
+
+  .error-message {
+    display: block;
+    color: #f33;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    &:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    &:not(:disabled):active {
+      transform: translateY(0);
+    }
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 6px;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.demo-credentials {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+
+  h3 {
+    font-size: 14px;
+    margin: 0 0 15px 0;
+    color: #666;
+    font-weight: 600;
+  }
+}
+
+.credentials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.credential-btn {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+
+  &:hover:not(:disabled) {
+    background-color: #f8f9ff;
+    border-color: #667eea;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .role-icon {
+    font-size: 20px;
+    margin-right: 10px;
+    min-width: 24px;
+  }
+
+  .role-name {
+    font-weight: 500;
+    color: #333;
+    font-size: 13px;
+    flex: 1;
+  }
+
+  .role-email {
+    font-size: 12px;
+    color: #999;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 20px;
+  }
+
+  .login-header {
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .credential-btn {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .role-email {
+      margin-top: 4px;
+    }
+  }
+}
