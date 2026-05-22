@@ -120,6 +120,11 @@ export class AsignacionesService {
     );
   }
 
+  aceptarIncidenteLive(idIncidente: number): Observable<{ id_asignacion: number; id_taller: number; nuevo_estado: string }> {
+    const url = `/incidentes/${idIncidente}/aceptar`;
+    return this.http.post<{ id_asignacion: number; id_taller: number; nuevo_estado: string }>(url, {});
+  }
+
   rechazar(idAsignacion: number, body: RechazarAsignacionBody): Observable<AsignacionTaller> {
     const url = `/talleres/mi-taller/asignaciones/${idAsignacion}/rechazar`;
     console.log('[AsignacionesService] rechazar →', { idAsignacion, body, url });

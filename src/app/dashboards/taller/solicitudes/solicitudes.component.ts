@@ -1,23 +1,42 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AsignacionesService } from '../../../shared/services/asignaciones.service';
 import { AsignacionTaller, EstadoNombre } from '../../../shared/models/asignacion.model';
+import { RealtimeService, WSEvent } from '../../../shared/services/realtime.service';
+
+type FiltroSolicitudes = 'en_vivo' | EstadoNombre;
+
+interface IncidenteLive {
+  id_incidente: number;
+  latitud: number;
+  longitud: number;
+  descripcion_usuario?: string;
+  resumen_ia?: string;
+  created_at: string;
+  tomado?: boolean;
+  aceptando?: boolean;
+  mio?: boolean;
+  error?: string;
+}
 
 @Component({
   selector: 'app-solicitudes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DatePipe, DecimalPipe],
   templateUrl: './solicitudes.component.html',
   styleUrl: './solicitudes.component.scss'
 })
-export class SolicitudesComponent implements OnInit {
+export class SolicitudesComponent implements OnInit, OnDestroy {
   solicitudes = signal<AsignacionTaller[]>([]);
+  enVivo = signal<IncidenteLive[]>([]);
   cargando = signal(false);
   error = signal<string | null>(null);
-  filtroEstado = signal<EstadoNombre>('pendiente');
+  filtroEstado = signal<FiltroSolicitudes>('en_vivo');
 
-  estadosDisponibles: EstadoNombre[] = [
+  filtrosDisponibles: FiltroSolicitudes[] = [
+    'en_vivo',
     'pendiente',
     'aceptada',
     'en_camino',
@@ -25,40 +44,100 @@ export class SolicitudesComponent implements OnInit {
     'rechazada'
   ];
 
+  private wsSub?: Subscription;
+
   constructor(
     private asignacionesService: AsignacionesService,
+    private rt: RealtimeService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    console.log('[SolicitudesComponent] ngOnInit');
-    this.cargarSolicitudes();
+    this.wsSub = this.rt.events$.subscribe(evt => this.handleWsEvent(evt));
+  }
+
+  ngOnDestroy(): void {
+    this.wsSub?.unsubscribe();
+  }
+
+  private handleWsEvent(evt: WSEvent): void {
+    if (evt.event === 'incidente.nuevo') {
+      const data = evt.data as IncidenteLive;
+      this.enVivo.update(arr => {
+        if (arr.some(x => x.id_incidente === data.id_incidente)) return arr;
+        return [{ ...data }, ...arr];
+      });
+      return;
+    }
+
+    if (evt.event === 'incidente.tomado') {
+      const id = (evt.data as { id_incidente: number }).id_incidente;
+      this.enVivo.update(arr =>
+        arr.map(e => (e.id_incidente === id ? { ...e, tomado: true } : e))
+      );
+      return;
+    }
+
+    if (evt.event === 'incidente.asignado') {
+      const id = (evt.data as { id_incidente: number }).id_incidente;
+      this.enVivo.update(arr =>
+        arr.map(e => (e.id_incidente === id ? { ...e, mio: true, aceptando: false } : e))
+      );
+      return;
+    }
+
+    if (evt.event === 'asignacion.estado.cambio' && this.filtroEstado() !== 'en_vivo') {
+      this.cargarSolicitudes();
+    }
   }
 
   cargarSolicitudes(): void {
-    const estado = this.filtroEstado();
-    console.log('[SolicitudesComponent] cargarSolicitudes →', { estado });
+    const filtro = this.filtroEstado();
+    if (filtro === 'en_vivo') return;
+
     this.cargando.set(true);
     this.error.set(null);
 
-    this.asignacionesService.listar({ estado }).subscribe({
+    this.asignacionesService.listar({ estado: filtro }).subscribe({
       next: (data) => {
-        console.log('[SolicitudesComponent] cargarSolicitudes ← OK', { count: data.length });
         this.solicitudes.set(data);
         this.cargando.set(false);
       },
       error: (err) => {
-        console.error('[SolicitudesComponent] cargarSolicitudes ← ERROR', err);
         this.error.set(err?.error?.detail || err?.message || 'Error al cargar solicitudes');
         this.cargando.set(false);
       }
     });
   }
 
-  cambiarFiltro(estado: EstadoNombre): void {
-    console.log('[SolicitudesComponent] cambiarFiltro →', { estado });
-    this.filtroEstado.set(estado);
-    this.cargarSolicitudes();
+  cambiarFiltro(filtro: FiltroSolicitudes): void {
+    this.filtroEstado.set(filtro);
+    if (filtro !== 'en_vivo') {
+      this.cargarSolicitudes();
+    }
+  }
+
+  aceptarIncidente(e: IncidenteLive): void {
+    e.aceptando = true;
+    e.error = undefined;
+    this.asignacionesService.aceptarIncidenteLive(e.id_incidente).subscribe({
+      next: () => {
+        e.aceptando = false;
+        e.mio = true;
+      },
+      error: (err) => {
+        e.aceptando = false;
+        if (err?.status === 409) {
+          e.tomado = true;
+        } else {
+          e.error = err?.error?.detail ?? 'Error aceptando';
+        }
+      },
+    });
+  }
+
+  abrirEnMaps(e: IncidenteLive): void {
+    window.open(`https://www.google.com/maps?q=${e.latitud},${e.longitud}`, '_blank');
   }
 
   verDetalle(asignacion: AsignacionTaller): void {
@@ -69,14 +148,19 @@ export class SolicitudesComponent implements OnInit {
     this.router.navigate(['/dashboard/taller']);
   }
 
-  etiquetaEstado(estado: EstadoNombre): string {
-    const map: Record<EstadoNombre, string> = {
+  etiquetaFiltro(filtro: FiltroSolicitudes): string {
+    const map: Record<FiltroSolicitudes, string> = {
+      en_vivo: '🔴 En vivo',
       pendiente: '⏳ Pendiente',
       aceptada: '✅ Aceptada',
       en_camino: '🚚 En camino',
       completada: '🏁 Completada',
       rechazada: '❌ Rechazada'
     };
-    return map[estado] ?? estado;
+    return map[filtro] ?? filtro;
+  }
+
+  etiquetaEstado(estado: EstadoNombre): string {
+    return this.etiquetaFiltro(estado as FiltroSolicitudes);
   }
 }

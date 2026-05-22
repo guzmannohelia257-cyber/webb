@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,8 +7,22 @@ import { TallerService, Taller, Tecnico, TecnicoCreate, TecnicoUpdate, Categoria
 import { AsignacionesService } from '../../shared/services/asignaciones.service';
 import { AsignacionTaller } from '../../shared/models/asignacion.model';
 import { EvaluacionResponse } from '../../shared/models/evaluacion.model';
-import { forkJoin, of } from 'rxjs';
+import { RealtimeService, WSEvent } from '../../shared/services/realtime.service';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+interface EmergenciaLive {
+  id_incidente: number;
+  latitud: number;
+  longitud: number;
+  descripcion_usuario?: string;
+  resumen_ia?: string;
+  created_at: string;
+  tomado?: boolean;
+  aceptando?: boolean;
+  mio?: boolean;
+  error?: string;
+}
 
 interface DashboardStat {
   label: string;
@@ -23,16 +37,16 @@ interface DashboardStat {
   templateUrl: './dashboard-taller.component.html',
   styleUrl: './dashboard-taller.component.scss'
 })
-export class DashboardTallerComponent implements OnInit {
+export class DashboardTallerComponent implements OnInit, OnDestroy {
   currentTaller: TallerAuth | null = null;
   taller: Taller | null = null;
   tecnicos: Tecnico[] = [];
   disponible = false;
   cambiandoDisponibilidad = false;
 
-  solicitudesPendientes: AsignacionTaller[] = [];
-  cargandoSolicitudes = false;
-  errorSolicitudes: string | null = null;
+  emergenciasLive: EmergenciaLive[] = [];
+  errorEmergencia: string | null = null;
+  private _wsSub?: Subscription;
 
   mostrarInfoTaller = false;
   cargandoInfoTaller = false;
@@ -82,6 +96,7 @@ export class DashboardTallerComponent implements OnInit {
     private authService: AuthService,
     private tallerService: TallerService,
     private asignacionesService: AsignacionesService,
+    private rt: RealtimeService,
     private router: Router,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
@@ -106,39 +121,74 @@ export class DashboardTallerComponent implements OnInit {
     this.cargarDatosTaller();
     this.cargarResumenDashboard();
     this.cargarCategorias();
+    this._wsSub = this.rt.events$.subscribe(evt => this.handleWsEvent(evt));
+  }
+
+  ngOnDestroy(): void {
+    this._wsSub?.unsubscribe();
+  }
+
+  private handleWsEvent(evt: WSEvent): void {
+    if (evt.event === 'incidente.nuevo') {
+      const data = evt.data as EmergenciaLive;
+      const exists = this.emergenciasLive.some(x => x.id_incidente === data.id_incidente);
+      if (!exists) {
+        this.emergenciasLive = [{ ...data }, ...this.emergenciasLive];
+        this.cdr.markForCheck();
+      }
+      return;
+    }
+
+    if (evt.event === 'incidente.tomado') {
+      const id = (evt.data as { id_incidente: number }).id_incidente;
+      this.emergenciasLive = this.emergenciasLive.map(e =>
+        e.id_incidente === id ? { ...e, tomado: true } : e
+      );
+      this.cdr.markForCheck();
+      return;
+    }
+
+    if (evt.event === 'incidente.asignado') {
+      const id = (evt.data as { id_incidente: number }).id_incidente;
+      this.emergenciasLive = this.emergenciasLive.map(e =>
+        e.id_incidente === id ? { ...e, mio: true, aceptando: false } : e
+      );
+      this.cdr.markForCheck();
+    }
+  }
+
+  aceptarEmergencia(e: EmergenciaLive): void {
+    e.aceptando = true;
+    e.error = undefined;
+    this.asignacionesService.aceptarIncidenteLive(e.id_incidente).subscribe({
+      next: () => {
+        e.aceptando = false;
+        e.mio = true;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        e.aceptando = false;
+        if (err?.status === 409) {
+          e.tomado = true;
+        } else {
+          e.error = err?.error?.detail ?? 'Error aceptando';
+        }
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  abrirEnMaps(e: EmergenciaLive): void {
+    window.open(`https://www.google.com/maps?q=${e.latitud},${e.longitud}`, '_blank');
   }
 
   irAMensajes(idIncidente: number): void {
     this.router.navigate(['/dashboard/taller/mensajes', idIncidente]);
   }
 
-  cargarSolicitudesPendientes(): void {
-    console.log('[DashboardTaller] cargarSolicitudesPendientes → estado=pendiente', {
-      tipoAuth: localStorage.getItem('tipo'),
-      hasToken: !!localStorage.getItem('access_token')
-    });
-    this.cargandoSolicitudes = true;
-    this.errorSolicitudes = null;
-    this.asignacionesService.listar({ estado: 'pendiente' }).subscribe({
-      next: (data) => {
-        console.log('[DashboardTaller] cargarSolicitudesPendientes ← OK', { count: data.length, data });
-        this.solicitudesPendientes = data;
-        this.cdr.markForCheck(); // Forzar detección de cambios
-        this.cargandoSolicitudes = false;
-      },
-      error: (err) => {
-        console.error('[DashboardTaller] cargarSolicitudesPendientes ← ERROR', err);
-        this.errorSolicitudes = err?.error?.detail || err?.message || 'Error al cargar solicitudes';
-        this.cargandoSolicitudes = false;
-        this.cdr.markForCheck();
-      }
-    });
-  }
-
   cargarResumenDashboard(): void {
     console.log('[DashboardTaller] cargarResumenDashboard →');
     this.cargandoResumen = true;
-    this.cargandoSolicitudes = true;
     this.cargandoTecnicos = true;
 
     const inicioMes = this.inicioDelMes();
@@ -153,7 +203,6 @@ export class DashboardTallerComponent implements OnInit {
       evaluaciones: this.tallerService.obtenerEvaluaciones().pipe(catchError(() => of([] as EvaluacionResponse[]))),
     }).subscribe({
       next: ({ pendientes, aceptadas, enCamino, historialMes, tecnicos, evaluaciones }) => {
-        this.solicitudesPendientes = pendientes;
         this.tecnicos = tecnicos;
         this.totalServiciosMes = historialMes.length;
 
@@ -179,7 +228,6 @@ export class DashboardTallerComponent implements OnInit {
         ];
 
         this.cargandoResumen = false;
-        this.cargandoSolicitudes = false;
         this.cargandoTecnicos = false;
         this.cdr.markForCheck();
       },
@@ -187,7 +235,6 @@ export class DashboardTallerComponent implements OnInit {
         console.error('[DashboardTaller] cargarResumenDashboard ← ERROR', err);
         this.error = err?.error?.detail || err?.message || 'Error al cargar métricas del dashboard';
         this.cargandoResumen = false;
-        this.cargandoSolicitudes = false;
         this.cargandoTecnicos = false;
         this.cdr.markForCheck();
       }

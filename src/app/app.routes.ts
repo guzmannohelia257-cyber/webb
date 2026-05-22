@@ -11,7 +11,6 @@ import { MensajesComponent } from './dashboards/taller/mensajes/mensajes.compone
 import { ServiciosComponent } from './dashboards/taller/servicios/servicios.component';
 import { CotizacionesComponent } from './dashboards/taller/cotizaciones/cotizaciones.component';
 import { CancelacionesComponent } from './dashboards/taller/cancelaciones/cancelaciones.component';
-import { EmergenciasComponent } from './dashboards/taller/emergencias/emergencias.component';
 import { KpisComponent } from './dashboards/taller/kpis/kpis.component';
 import { UnauthorizedComponent } from './shared/pages/unauthorized.component';
 import { authGuard, tipoGuard, adminGuard, publicGuard } from './shared/guards/auth.guard';
@@ -51,7 +50,6 @@ export const routes: Routes = [
           { path: 'servicios', component: ServiciosComponent },
           { path: 'cotizaciones', component: CotizacionesComponent },
           { path: 'cancelaciones', component: CancelacionesComponent },
-          { path: 'emergencias', component: EmergenciasComponent },
           { path: 'kpis', component: KpisComponent },
         ]
       },

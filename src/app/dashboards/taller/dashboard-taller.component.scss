@@ -826,3 +826,127 @@
     }
   }
 }
+
+// ── Sección "Emergencias en vivo" (dashboard inicio) ───────────────
+.solicitudes-pendientes-section {
+  .section-header h3 {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    .dot-live {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--danger);
+      animation: dash-live-pulse 1.6s ease-in-out infinite;
+    }
+
+    .contador {
+      font-weight: 600;
+      color: var(--ink-muted);
+      font-size: 14px;
+    }
+  }
+}
+
+.solicitud-card.card-live {
+  cursor: default;
+  border-color: rgba(177, 29, 39, 0.25);
+
+  &:hover { transform: none; }
+
+  &.tomada {
+    opacity: 0.55;
+    border-color: var(--border);
+  }
+
+  &.mia {
+    border-color: rgba(21, 128, 61, 0.4);
+  }
+
+  .solicitud-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .badge-estado.badge-live {
+    background: var(--danger-soft);
+    color: var(--danger-ink);
+    border: 1px solid rgba(177, 29, 39, 0.3);
+    padding: 3px 9px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    animation: dash-live-pulse 1.6s ease-in-out infinite;
+  }
+
+  .card-time {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .link-ubicacion {
+    display: inline-block;
+    margin: 8px 0 12px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--brand-ink);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 2px;
+  }
+
+  .card-acciones {
+    margin-top: 10px;
+  }
+
+  .btn-aceptar-live {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: var(--brand-strong, var(--brand));
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .status-live {
+    padding: 8px 10px;
+    border-radius: var(--radius-md);
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: center;
+
+    &.muted { background: var(--overlay); color: var(--ink-muted); }
+    &.ok    { background: var(--success-soft); color: var(--success-ink); }
+    &.error { background: var(--danger-soft); color: var(--danger-ink); }
+  }
+}
+
+@keyframes dash-live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
