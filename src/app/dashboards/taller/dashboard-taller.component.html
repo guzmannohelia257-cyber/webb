@@ -110,6 +110,45 @@
     }
   </section>
 
+  @if (solicitudesPendientes.length > 0) {
+    <section class="solicitudes-pendientes-section">
+      <div class="section-header">
+        <h3>Solicitudes pendientes <span class="contador">({{ solicitudesPendientes.length }})</span></h3>
+        <div class="section-actions">
+          <button class="btn btn-primary btn-small" (click)="irATodasSolicitudes()">
+            Ver todas
+          </button>
+        </div>
+      </div>
+
+      <div class="solicitudes-grid">
+        @for (s of solicitudesPendientes; track s.id_asignacion) {
+          <div class="solicitud-card" (click)="irASolicitud(s)">
+            <div class="solicitud-header">
+              <span class="badge-estado badge-pendiente">Pendiente</span>
+              @if (s.incidente.prioridad) {
+                <span class="badge-prioridad prioridad-{{ s.incidente.prioridad.nivel }}">
+                  {{ etiquetaPrioridad(s.incidente.prioridad.nivel) }}
+                </span>
+              }
+            </div>
+            <h4>{{ s.incidente.usuario.nombre }} · {{ s.incidente.vehiculo.placa }}</h4>
+            <p class="categoria">{{ s.incidente.categoria?.nombre || 'Sin categoría' }}</p>
+            <p class="resumen">{{ s.incidente.resumen_ia || s.incidente.descripcion_usuario || '-' }}</p>
+            <p class="fecha"><small>{{ s.incidente.created_at | date:'short' }}</small></p>
+            <button
+              class="btn-mensajes"
+              (click)="$event.stopPropagation(); irAMensajes(s.incidente.id_incidente)"
+              title="Abrir chat con el cliente"
+            >
+              Mensajes
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
   <section class="info-toggle-section">
     <button type="button" class="btn btn-primary" (click)="toggleInfoTaller()">
       {{ mostrarInfoTaller ? 'Ocultar' : 'Ver' }} información del taller

@@ -46,6 +46,7 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
 
   emergenciasLive: EmergenciaLive[] = [];
   errorEmergencia: string | null = null;
+  solicitudesPendientes: AsignacionTaller[] = [];
   private _wsSub?: Subscription;
 
   mostrarInfoTaller = false;
@@ -154,7 +155,22 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
         e.id_incidente === id ? { ...e, mio: true, aceptando: false } : e
       );
       this.cdr.markForCheck();
+      this.refrescarPendientes();
+      return;
     }
+
+    if (evt.event === 'asignacion.estado.cambio') {
+      this.refrescarPendientes();
+    }
+  }
+
+  private refrescarPendientes(): void {
+    this.asignacionesService.listar({ estado: 'pendiente' })
+      .pipe(catchError(() => of([] as AsignacionTaller[])))
+      .subscribe(data => {
+        this.solicitudesPendientes = data;
+        this.cdr.markForCheck();
+      });
   }
 
   aceptarEmergencia(e: EmergenciaLive): void {
@@ -203,6 +219,7 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
       evaluaciones: this.tallerService.obtenerEvaluaciones().pipe(catchError(() => of([] as EvaluacionResponse[]))),
     }).subscribe({
       next: ({ pendientes, aceptadas, enCamino, historialMes, tecnicos, evaluaciones }) => {
+        this.solicitudesPendientes = pendientes;
         this.tecnicos = tecnicos;
         this.totalServiciosMes = historialMes.length;
 
