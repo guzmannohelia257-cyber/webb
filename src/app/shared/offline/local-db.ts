@@ -24,12 +24,12 @@ export interface OutboxItem {
   last_error?: string;
 }
 
-export class YaryLocalDB extends Dexie {
+export class AppLocalDB extends Dexie {
   incidentes!: Table<CachedIncidente, number>;
   outbox!: Table<OutboxItem, number>;
 
   constructor() {
-    super('yary-offline');
+    super('emergencia-offline');
     this.version(1).stores({
       incidentes: 'id_incidente, created_at',
       outbox: '++id, client_id, created_at',
@@ -37,4 +37,4 @@ export class YaryLocalDB extends Dexie {
   }
 }
 
-export const localDB = new YaryLocalDB();
+export const localDB = new AppLocalDB();

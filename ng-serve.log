@@ -943,3 +943,75 @@ Page reload sent to client(s).
 Application bundle generation complete. [0.267 seconds] - 2026-05-22T15:42:45.729Z
 
 Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m736.44 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.365 seconds] - 2026-05-22T18:19:57.079Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m736.46 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.135 seconds] - 2026-05-22T18:20:05.474Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m736.48 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.169 seconds] - 2026-05-22T18:20:10.553Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.006 seconds] - 2026-05-22T18:20:17.519Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m736.51 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.173 seconds] - 2026-05-22T18:20:25.362Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m736.53 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.146 seconds] - 2026-05-22T18:20:33.907Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.125 seconds] - 2026-05-22T18:20:41.715Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.056 seconds] - 2026-05-22T18:20:50.252Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m736.54 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.127 seconds] - 2026-05-22T18:21:08.532Z
+
+Page reload sent to client(s).

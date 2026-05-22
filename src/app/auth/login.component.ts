@@ -27,8 +27,8 @@ export class LoginComponent {
   tipoSeleccionado = signal<TipoRol>('taller');
 
   roles: RolOption[] = [
-    { tipo: 'taller', name: 'Taller (Gerente)', email: 'gerente@tallerexcelente.com', password: 'taller123!' },
-    { tipo: 'admin', name: 'Admin', email: 'admin@plataforma.com', password: 'admin123!' }
+    { tipo: 'taller', name: 'Taller (Gerente)', email: 'tallerexcelente.demo@gmail.com', password: 'taller123!' },
+    { tipo: 'admin', name: 'Admin', email: 'admin.flujoemergencia@gmail.com', password: 'admin123!' }
   ];
 
   constructor(
