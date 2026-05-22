@@ -36,17 +36,21 @@ export class HttpService {
   }
 
   /**
-   * Maneja errores HTTP, especialmente 401 (Bug 2 fix)
+   * Maneja errores HTTP
    */
   private handleError(error: any) {
+    if (error.status === 0) {
+      const msg = `No se puede conectar con el servidor (${this.baseUrl}). Verifica que el backend esté corriendo.`;
+      console.error('[HttpService] Conexión rehusada (status 0):', msg);
+      return throwError(() => ({ status: 0, error: { detail: msg }, message: msg }));
+    }
+
     if (error.status === 401) {
-      // Token expirado o inválido
       this.authService.logout();
       this.router.navigate(['/login']);
       return throwError(() => new Error('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.'));
     }
 
-    // Propagar otros errores
     return throwError(() => error);
   }
 

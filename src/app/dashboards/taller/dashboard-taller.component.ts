@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,9 +7,8 @@ import { TallerService, Taller, Tecnico, TecnicoCreate, TecnicoUpdate, Categoria
 import { AsignacionesService } from '../../shared/services/asignaciones.service';
 import { AsignacionTaller } from '../../shared/models/asignacion.model';
 import { EvaluacionResponse } from '../../shared/models/evaluacion.model';
-import { NotificacionService, Notificacion } from '../../shared/services/notificacion.service';
-import { Subscription, forkJoin, interval, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 interface DashboardStat {
   label: string;
@@ -24,7 +23,7 @@ interface DashboardStat {
   templateUrl: './dashboard-taller.component.html',
   styleUrl: './dashboard-taller.component.scss'
 })
-export class DashboardTallerComponent implements OnInit, OnDestroy {
+export class DashboardTallerComponent implements OnInit {
   currentTaller: TallerAuth | null = null;
   taller: Taller | null = null;
   tecnicos: Tecnico[] = [];
@@ -65,11 +64,6 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
   ticketPromedioMes = 0;
   totalServiciosMes = 0;
 
-  notificaciones: Notificacion[] = [];
-  notificacionesNoLeidas = 0;
-  mostrarNotificaciones = false;
-  mostrarMenuAcciones = false;
-  private _notifSub?: Subscription;
 
   quickActions = [
     { icon: '📋', label: 'Asignaciones', action: 'assignments' },
@@ -88,7 +82,6 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private tallerService: TallerService,
     private asignacionesService: AsignacionesService,
-    private notifService: NotificacionService,
     private router: Router,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
@@ -113,90 +106,6 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
     this.cargarDatosTaller();
     this.cargarResumenDashboard();
     this.cargarCategorias();
-
-    if (!this.esTallerAutenticado()) {
-      return;
-    }
-
-    this.cargarNotificaciones();
-    this.notifService.initFirebase();
-    // Poll notificaciones cada 30s
-    this._notifSub = interval(30_000)
-      .pipe(
-        switchMap(() => this.notifService.getMisNotificaciones().pipe(
-          catchError(() => of([] as Notificacion[]))
-        ))
-      )
-      .subscribe(data => {
-        this.notificaciones = data;
-        this.notificacionesNoLeidas = data.filter(n => !n.leido).length;
-        this.cdr.markForCheck();
-      });
-  }
-
-  ngOnDestroy(): void {
-    this._notifSub?.unsubscribe();
-  }
-
-  cargarNotificaciones(): void {
-    if (!this.esTallerAutenticado()) return;
-
-    this.notifService.getMisNotificaciones()
-      .pipe(catchError(() => of([] as Notificacion[])))
-      .subscribe({
-        next: (data) => {
-          this.notificaciones = data;
-          this.notificacionesNoLeidas = data.filter(n => !n.leido).length;
-          this.cdr.markForCheck();
-        }
-      });
-  }
-
-  private esTallerAutenticado(): boolean {
-    return this.authService.getTipo() === 'taller' && !!this.authService.getToken();
-  }
-
-  toggleNotificaciones(): void {
-    this.mostrarMenuAcciones = false;
-    this.mostrarNotificaciones = !this.mostrarNotificaciones;
-  }
-
-  toggleMenuAcciones(): void {
-    this.mostrarNotificaciones = false;
-    this.mostrarMenuAcciones = !this.mostrarMenuAcciones;
-  }
-
-  abrirCrearTecnicoDesdeMenu(): void {
-    this.mostrarMenuAcciones = false;
-    this.abrirFormularioTecnico();
-  }
-
-  irATecnicosDesdeMenu(): void {
-    this.mostrarMenuAcciones = false;
-    this.handleAction('technicians');
-  }
-
-  irATodasSolicitudesDesdeMenu(): void {
-    this.mostrarMenuAcciones = false;
-    this.irATodasSolicitudes();
-  }
-
-  irAHistorialDesdeMenu(): void {
-    this.mostrarMenuAcciones = false;
-    this.irAHistorial();
-  }
-
-  marcarLeida(id: number): void {
-    this.notifService.marcarLeida(id).subscribe(() => {
-      const n = this.notificaciones.find(x => x.id_notificacion === id);
-      if (n) n.leido = true;
-      this.notificacionesNoLeidas = this.notificaciones.filter(x => !x.leido).length;
-      this.cdr.markForCheck();
-    });
-  }
-
-  irAHistorial(): void {
-    this.router.navigate(['/dashboard/taller/historial']);
   }
 
   irAMensajes(idIncidente: number): void {
@@ -661,11 +570,6 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
       });
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
   }
 
   private inicioDelMes(): string {

@@ -43,39 +43,43 @@
       } @else {
         <div class="stats-resumen">
           <div class="stat-card">
-            <div class="stat-valor">{{ totalComisionMensual | currency }}</div>
+            <div class="stat-value">{{ totalComisionMensual | currency }}</div>
             <div class="stat-label">Comisión Total Año</div>
           </div>
           <div class="stat-card">
-            <div class="stat-valor">{{ gananciasMensual.length }}</div>
+            <div class="stat-value">{{ gananciasMensual.length }}</div>
             <div class="stat-label">Meses con datos</div>
           </div>
           <div class="stat-card">
-            <div class="stat-valor">{{ totalServiciosMensual }}</div>
+            <div class="stat-value">{{ totalServiciosMensual }}</div>
             <div class="stat-label">Total Servicios</div>
           </div>
           <div class="stat-card">
-            <div class="stat-valor">{{ (totalComisionMensual / gananciasMensual.length) | currency }}</div>
+            <div class="stat-value">{{ (totalComisionMensual / gananciasMensual.length) | currency }}</div>
             <div class="stat-label">Promedio Mensual</div>
           </div>
         </div>
 
         <div class="tabla-responsiva">
           <table class="tabla-ganancias">
+            <colgroup>
+              <col style="width: 30%">
+              <col style="width: 15%">
+              <col style="width: 27.5%">
+              <col style="width: 27.5%">
+            </colgroup>
             <thead>
               <tr>
                 <th>Mes</th>
-                <th>Año</th>
-                <th>Total Pagos</th>
-                <th>Monto Procesado</th>
-                <th>Comisión Plataforma</th>
+                <th class="th-centro">Total Pagos</th>
+                <th class="th-monto">Monto Procesado</th>
+                <th class="th-monto">Comisión Plataforma</th>
               </tr>
             </thead>
             <tbody>
               @for (ganancia of gananciasMensual; track ganancia.mes) {
                 <tr>
                   <td><strong>{{ ganancia.nombre_mes }}</strong></td>
-                  <td>{{ ganancia.anio }}</td>
                   <td class="centro">{{ ganancia.total_pagos }}</td>
                   <td class="monto">{{ ganancia.monto_total_procesado | currency }}</td>
                   <td class="monto">{{ ganancia.comision_plataforma | currency }}</td>
@@ -84,9 +88,9 @@
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="2"><strong>TOTAL</strong></td>
+                <td><strong>TOTAL</strong></td>
                 <td class="centro"><strong>{{ totalServiciosMensual }}</strong></td>
-                <td></td>
+                <td class="monto"><strong>{{ totalMontoProcesadoMensual | currency }}</strong></td>
                 <td class="monto"><strong>{{ totalComisionMensual | currency }}</strong></td>
               </tr>
             </tfoot>
@@ -139,19 +143,19 @@
       } @else {
         <div class="stats-resumen">
           <div class="stat-card">
-            <div class="stat-valor">{{ totalComisionTaller | currency }}</div>
+            <div class="stat-value">{{ totalComisionTaller | currency }}</div>
             <div class="stat-label">Comisión Total</div>
           </div>
           <div class="stat-card">
-            <div class="stat-valor">{{ gananciaPorTaller.length }}</div>
+            <div class="stat-value">{{ gananciaPorTaller.length }}</div>
             <div class="stat-label">Talleres con actividad</div>
           </div>
           <div class="stat-card">
-            <div class="stat-valor">{{ promedioRating | number: '1.2-2' }}</div>
+            <div class="stat-value">{{ promedioRating | number: '1.2-2' }}</div>
             <div class="stat-label">Rating Promedio</div>
           </div>
           <div class="stat-card">
-            <div class="stat-valor">{{ totalServiciosTaller }}</div>
+            <div class="stat-value">{{ totalServiciosTaller }}</div>
             <div class="stat-label">Total Servicios</div>
           </div>
         </div>

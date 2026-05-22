@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HttpService } from '../../../shared/services/http.service';
 import { AsignacionTaller } from '../../../shared/models/asignacion.model';
 import { finalize } from 'rxjs/operators';
@@ -12,7 +13,10 @@ import { finalize } from 'rxjs/operators';
   template: `
     <div class="historial-container">
       <div class="historial-header">
-        <h2>Historial de Atenciones</h2>
+        <div style="display:flex;align-items:center;gap:12px">
+          <button (click)="volver()" style="background:none;border:1px solid #d1d5db;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:14px;color:#374151">← Volver</button>
+          <h2 style="margin:0">Historial de Atenciones</h2>
+        </div>
         <div class="filtros">
           <label>
             Desde:
@@ -53,9 +57,9 @@ import { finalize } from 'rxjs/operators';
             <tr *ngFor="let a of atenciones">
               <td>{{ a.id_asignacion }}</td>
               <td>{{ a.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-              <td>{{ a.incidente?.usuario?.nombre ?? '—' }}</td>
+              <td>{{ a.incidente.usuario.nombre }}</td>
               <td>{{ vehiculoLabel(a) }}</td>
-              <td>{{ a.incidente?.categoria?.nombre ?? '—' }}</td>
+              <td>{{ a.incidente.categoria?.nombre ?? '—' }}</td>
               <td>{{ a.id_usuario ?? '—' }}</td>
               <td>
                 <span class="badge completada">{{ a.estado.nombre }}</span>
@@ -110,7 +114,12 @@ export class HistorialComponent implements OnInit {
   constructor(
     private http: HttpService,
     private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {}
+
+  volver(): void {
+    this.router.navigate(['/dashboard/taller/inicio']);
+  }
 
   ngOnInit(): void {
     console.log('[Historial] ngOnInit → cargar historial inicial');
@@ -120,7 +129,6 @@ export class HistorialComponent implements OnInit {
   cargar(): void {
     this.cargando = true;
     this.error = null;
-    this.cdr.detectChanges();
 
     let url = `/talleres/mi-taller/historial?pagina=${this.paginaActual}&por_pagina=${this.porPagina}`;
     if (this.filtroDesde) url += `&desde=${this.filtroDesde}`;

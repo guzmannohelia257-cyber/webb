@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TallerService } from '../../../shared/services/taller.service';
@@ -18,6 +18,8 @@ export class ResenasComponent implements OnInit {
   promedio = 0;
   totalEstrellas = 0;
   Math = Math; // Para usar Math en el template
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     private tallerService: TallerService,
@@ -44,11 +46,13 @@ export class ResenasComponent implements OnInit {
         }
 
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('[ResenasComponent] cargarEvaluaciones ← ERROR', err);
         this.error = err?.error?.detail || err?.message || 'Error al cargar reseñas';
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }

@@ -1,0 +1,61 @@
+<div class="emergencias-page">
+  <header>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+      <button class="btn-back" (click)="volver()">← Volver</button>
+      <h1 style="margin:0">Emergencias entrantes</h1>
+    </div>
+    <p class="hint">
+      Aqui aparecen las solicitudes compatibles con tus servicios en tiempo real.
+      El primer taller que acepta gana.
+    </p>
+  </header>
+
+  @if (emergencias().length === 0) {
+    <div class="empty">Esperando emergencias...</div>
+  }
+
+  <div class="grid">
+    @for (e of emergencias(); track e.id_incidente) {
+      <div class="card" [class.tomada]="e.tomado && !e.mio" [class.mia]="e.mio">
+        <div class="card-header">
+          <strong>Incidente #{{ e.id_incidente }}</strong>
+          <span class="time">{{ e.created_at | date:'shortTime' }}</span>
+        </div>
+
+        <div class="resumen">
+          {{ e.resumen_ia || e.descripcion_usuario || 'Sin descripcion' }}
+        </div>
+
+        <div class="ubicacion">
+          <button class="link" (click)="abrirEnMaps(e)">
+            📍 {{ e.latitud | number:'1.4-4' }}, {{ e.longitud | number:'1.4-4' }}
+          </button>
+        </div>
+
+        <div class="acciones">
+          @if (!e.tomado && !e.mio) {
+            <button
+              class="primary"
+              (click)="aceptar(e)"
+              [disabled]="e.aceptando"
+            >
+              {{ e.aceptando ? 'Aceptando...' : 'ACEPTAR' }}
+            </button>
+          }
+
+          @if (e.tomado && !e.mio) {
+            <div class="status muted">Ya fue tomado por otro taller</div>
+          }
+
+          @if (e.mio) {
+            <div class="status ok">✓ Aceptado por tu taller</div>
+          }
+
+          @if (e.error) {
+            <div class="status error">{{ e.error }}</div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

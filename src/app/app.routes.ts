@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login.component';
+import { TallerShellComponent } from './dashboards/taller/taller-shell.component';
 import { DashboardTallerComponent } from './dashboards/taller/dashboard-taller.component';
 import { DashboardAdminComponent } from './dashboards/admin/dashboard-admin.component';
 import { SolicitudesComponent } from './dashboards/taller/solicitudes/solicitudes.component';
@@ -7,6 +8,11 @@ import { SolicitudDetalleComponent } from './dashboards/taller/solicitud-detalle
 import { ResenasComponent } from './dashboards/taller/resenas/resenas.component';
 import { HistorialComponent } from './dashboards/taller/historial/historial.component';
 import { MensajesComponent } from './dashboards/taller/mensajes/mensajes.component';
+import { ServiciosComponent } from './dashboards/taller/servicios/servicios.component';
+import { CotizacionesComponent } from './dashboards/taller/cotizaciones/cotizaciones.component';
+import { CancelacionesComponent } from './dashboards/taller/cancelaciones/cancelaciones.component';
+import { EmergenciasComponent } from './dashboards/taller/emergencias/emergencias.component';
+import { KpisComponent } from './dashboards/taller/kpis/kpis.component';
 import { UnauthorizedComponent } from './shared/pages/unauthorized.component';
 import { authGuard, tipoGuard, adminGuard, publicGuard } from './shared/guards/auth.guard';
 
@@ -26,15 +32,27 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       {
+        path: '',
+        redirectTo: 'taller',
+        pathMatch: 'full'
+      },
+      {
         path: 'taller',
+        component: TallerShellComponent,
         canActivate: [tipoGuard(['taller'])],
         children: [
-          { path: '', component: DashboardTallerComponent },
+          { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+          { path: 'inicio', component: DashboardTallerComponent },
           { path: 'solicitudes', component: SolicitudesComponent },
           { path: 'solicitudes/:id', component: SolicitudDetalleComponent },
           { path: 'resenas', component: ResenasComponent },
           { path: 'historial', component: HistorialComponent },
           { path: 'mensajes/:idIncidente', component: MensajesComponent },
+          { path: 'servicios', component: ServiciosComponent },
+          { path: 'cotizaciones', component: CotizacionesComponent },
+          { path: 'cancelaciones', component: CancelacionesComponent },
+          { path: 'emergencias', component: EmergenciasComponent },
+          { path: 'kpis', component: KpisComponent },
         ]
       },
       {

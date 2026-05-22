@@ -1,10 +1,10 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
     <div class="header-content">
-      <h1>👨‍💼 Dashboard Administrador</h1>
+      <h1>Yary · Administración</h1>
       <div class="header-info">
         <span class="user-name">{{ currentUser?.nombre }}</span>
-        <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+        <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
       </div>
     </div>
   </header>
@@ -36,10 +36,10 @@
       </section>
 
       <section class="quick-actions">
-        <h3>Acciones de Administración</h3>
+        <h3>Acciones de administración</h3>
         <div class="actions-grid">
           @for (action of quickActions; track action.action) {
-            <button 
+            <button
               class="action-card"
               (click)="handleAction(action.action)"
             >
@@ -55,7 +55,7 @@
     @if (vistaActual === 'talleres') {
       <nav class="nav-volver">
         <button (click)="irAInicio()" class="btn-volver">
-          ← Volver al Inicio
+          ← Volver al inicio
         </button>
       </nav>
       <app-admin-talleres></app-admin-talleres>
@@ -65,7 +65,7 @@
     @if (vistaActual === 'ganancias') {
       <nav class="nav-volver">
         <button (click)="irAInicio()" class="btn-volver">
-          ← Volver al Inicio
+          ← Volver al inicio
         </button>
       </nav>
       <app-admin-ganancias></app-admin-ganancias>
@@ -75,7 +75,7 @@
     @if (vistaActual === 'servicios') {
       <nav class="nav-volver">
         <button (click)="irAInicio()" class="btn-volver">
-          ← Volver al Inicio
+          ← Volver al inicio
         </button>
       </nav>
       <app-admin-servicios></app-admin-servicios>

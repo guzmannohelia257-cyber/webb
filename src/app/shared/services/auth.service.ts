@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { RealtimeService } from './realtime.service';
 
 export type TipoAuth = 'taller' | 'usuario';
 
@@ -51,7 +52,10 @@ export class AuthService {
   private currentTaller$ = new BehaviorSubject<TallerAuth | null>(null);
   private isAuthenticated$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private rt: RealtimeService
+  ) {
     this.checkExistingToken();
   }
 
@@ -89,6 +93,7 @@ export class AuthService {
           this.currentTaller$.next(res.taller);
           this.currentUser$.next(null);
           this.isAuthenticated$.next(true);
+          this.rt.connect(res.access_token);
         })
       );
   }
@@ -106,6 +111,7 @@ export class AuthService {
           this.currentUser$.next(res.usuario);
           this.currentTaller$.next(null);
           this.isAuthenticated$.next(true);
+          this.rt.connect(res.access_token);
         })
       );
   }
@@ -119,6 +125,7 @@ export class AuthService {
     this.currentUser$.next(null);
     this.currentTaller$.next(null);
     this.isAuthenticated$.next(false);
+    this.rt.disconnect();
   }
 
   getToken(): string | null {

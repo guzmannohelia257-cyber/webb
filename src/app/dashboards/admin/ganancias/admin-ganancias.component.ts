@@ -112,6 +112,10 @@ export class AdminGananciasComponent implements OnInit, OnDestroy {
     return this.gananciasMensual.reduce((s, f) => s + f.total_pagos, 0);
   }
 
+  get totalMontoProcesadoMensual(): number {
+    return this.gananciasMensual.reduce((s, f) => s + f.monto_total_procesado, 0);
+  }
+
   get totalComisionTaller(): number {
     return this.gananciaPorTaller.reduce((s, f) => s + f.comision_plataforma, 0);
   }

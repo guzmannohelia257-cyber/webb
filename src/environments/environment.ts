@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://back-despliegue-cp05.onrender.com',
+  apiUrl: 'http://localhost:8000',
+  wsBase: 'ws://localhost:8000',
   firebase: {
     apiKey: 'REEMPLAZAR_CON_API_KEY_DE_FIREBASE_CONSOLE',
     authDomain: 'emergenciavehicularyary.firebaseapp.com',

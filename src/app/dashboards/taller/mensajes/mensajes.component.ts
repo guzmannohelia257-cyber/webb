@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpService } from '../../../shared/services/http.service';
 import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -23,6 +23,7 @@ export interface Mensaje {
   template: `
     <div class="mensajes-container">
       <div class="mensajes-header">
+        <button (click)="volver()" style="background:none;border:1px solid #d1d5db;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:14px;color:#374151">← Volver</button>
         <h2>Mensajes — Incidente #{{ idIncidente }}</h2>
       </div>
 
@@ -63,6 +64,7 @@ export interface Mensaje {
   `,
   styles: [`
     .mensajes-container { display: flex; flex-direction: column; height: calc(100vh - 120px); padding: 16px; gap: 12px; }
+    .mensajes-header { display: flex; align-items: center; gap: 12px; }
     .mensajes-header h2 { margin: 0; }
     .loading, .error-msg, .empty { text-align: center; padding: 32px; color: #666; }
     .error-msg { color: #d32f2f; }
@@ -89,10 +91,17 @@ export class MensajesComponent implements OnInit, OnDestroy {
 
   private _pollSub?: Subscription;
 
+  private cdr = inject(ChangeDetectorRef);
+
   constructor(
     private http: HttpService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
+
+  volver(): void {
+    this.router.navigate(['/dashboard/taller/solicitudes']);
+  }
 
   ngOnInit(): void {
     this.idIncidente = Number(this.route.snapshot.paramMap.get('idIncidente') ?? 0);
@@ -101,7 +110,7 @@ export class MensajesComponent implements OnInit, OnDestroy {
       // Polling cada 10 segundos para nuevos mensajes
       this._pollSub = interval(10_000)
         .pipe(switchMap(() => this.http.get<Mensaje[]>(`/mensajes/${this.idIncidente}/taller`)))
-        .subscribe({ next: (data) => (this.mensajes = data) });
+        .subscribe({ next: (data) => { this.mensajes = data; this.cdr.detectChanges(); } });
     }
   }
 
@@ -115,10 +124,12 @@ export class MensajesComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.mensajes = data;
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.error = err?.error?.detail ?? 'Error al cargar mensajes';
         this.cargando = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -135,10 +146,12 @@ export class MensajesComponent implements OnInit, OnDestroy {
           this.mensajes.push(nuevo);
           this.nuevoMensaje = '';
           this.enviando = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           this.error = err?.error?.detail ?? 'Error al enviar mensaje';
           this.enviando = false;
+          this.cdr.detectChanges();
         },
       });
   }

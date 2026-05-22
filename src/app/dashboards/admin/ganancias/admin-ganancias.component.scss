@@ -97,7 +97,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       border-left: 4px solid #007bff;
 
-      .stat-valor {
+      .stat-value {
         font-size: 24px;
         font-weight: 700;
         color: #007bff;
@@ -136,6 +136,9 @@
         color: #495057;
         font-size: 13px;
         text-transform: uppercase;
+
+        &.th-centro { text-align: center; }
+        &.th-monto  { text-align: right; }
       }
     }
 
@@ -176,10 +179,8 @@
           padding: 15px;
           color: #333;
 
-          &.monto {
-            text-align: right;
-            color: #007bff;
-          }
+          &.monto  { text-align: right;  color: #007bff; }
+          &.centro { text-align: center; }
         }
       }
     }
