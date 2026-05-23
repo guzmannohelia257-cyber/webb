@@ -85,20 +85,17 @@
             </button>
 
             <div class="card-acciones">
-              @if (!e.tomado && !e.mio) {
+              @if (!e.tomado) {
                 <button
                   class="btn-aceptar-live"
-                  (click)="aceptarEmergencia(e)"
+                  (click)="verInformacionEmergencia(e)"
                   [disabled]="e.aceptando"
                 >
-                  {{ e.aceptando ? 'Aceptando…' : 'ACEPTAR' }}
+                  {{ e.aceptando ? 'Cargando…' : 'VER INFORMACIÓN' }}
                 </button>
               }
               @if (e.tomado && !e.mio) {
                 <div class="status-live muted">Ya fue tomado por otro taller</div>
-              }
-              @if (e.mio) {
-                <div class="status-live ok">✓ Aceptado por tu taller</div>
               }
               @if (e.error) {
                 <div class="status-live error">{{ e.error }}</div>

@@ -173,22 +173,36 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
       });
   }
 
-  aceptarEmergencia(e: EmergenciaLive): void {
+  /**
+   * Click en "Ver información" en la card live: con el nuevo flujo el cliente
+   * ya confirmó este taller en /confirmar y existe una asignacion en pendiente.
+   * Buscamos esa asignacion y redirigimos al detalle, donde el taller puede
+   * asignar técnico, aceptar formalmente, ver mensajes, etc.
+   */
+  verInformacionEmergencia(e: EmergenciaLive): void {
     e.aceptando = true;
     e.error = undefined;
-    this.asignacionesService.aceptarIncidenteLive(e.id_incidente).subscribe({
-      next: () => {
+    this.cdr.markForCheck();
+
+    this.asignacionesService.listar({}).subscribe({
+      next: (asignaciones) => {
+        const mia = asignaciones.find(
+          (a) => a.incidente?.id_incidente === e.id_incidente,
+        );
         e.aceptando = false;
-        e.mio = true;
-        this.cdr.markForCheck();
+        if (mia) {
+          this.router.navigate(['/dashboard/taller/solicitudes', mia.id_asignacion]);
+        } else {
+          // No hay asignacion para este taller en este incidente — quizá lo
+          // tomó otro taller antes. Mostramos el mensaje y marcamos como tomado.
+          e.tomado = true;
+          e.error = 'No tienes una asignación para este incidente todavía.';
+          this.cdr.markForCheck();
+        }
       },
       error: (err) => {
         e.aceptando = false;
-        if (err?.status === 409) {
-          e.tomado = true;
-        } else {
-          e.error = err?.error?.detail ?? 'Error aceptando';
-        }
+        e.error = err?.error?.detail ?? 'Error consultando asignación';
         this.cdr.markForCheck();
       },
     });

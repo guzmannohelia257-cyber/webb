@@ -117,21 +117,30 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Con el nuevo flujo, cuando el cliente confirma este taller ya existe
+   * una asignación en pendiente. Buscamos esa asignacion y redirigimos al
+   * detalle (donde se asigna técnico, se acepta formalmente, etc.).
+   */
   aceptarIncidente(e: IncidenteLive): void {
     e.aceptando = true;
     e.error = undefined;
-    this.asignacionesService.aceptarIncidenteLive(e.id_incidente).subscribe({
-      next: () => {
+    this.asignacionesService.listar({}).subscribe({
+      next: (asignaciones) => {
+        const mia = asignaciones.find(
+          (a) => a.incidente?.id_incidente === e.id_incidente,
+        );
         e.aceptando = false;
-        e.mio = true;
+        if (mia) {
+          this.router.navigate(['/dashboard/taller/solicitudes', mia.id_asignacion]);
+        } else {
+          e.tomado = true;
+          e.error = 'No tienes una asignación para este incidente.';
+        }
       },
       error: (err) => {
         e.aceptando = false;
-        if (err?.status === 409) {
-          e.tomado = true;
-        } else {
-          e.error = err?.error?.detail ?? 'Error aceptando';
-        }
+        e.error = err?.error?.detail ?? 'Error consultando asignación';
       },
     });
   }
