@@ -11,18 +11,10 @@ import { RealtimeService, WSEvent } from '../../shared/services/realtime.service
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-interface EmergenciaLive {
-  id_incidente: number;
-  latitud: number;
-  longitud: number;
-  descripcion_usuario?: string;
-  resumen_ia?: string;
-  created_at: string;
-  tomado?: boolean;
-  aceptando?: boolean;
-  mio?: boolean;
-  error?: string;
-}
+// Nota: ya no usamos un tipo aparte EmergenciaLive. Tras unificar dashboard,
+// la lista en vivo es directamente AsignacionTaller (las asignaciones que el
+// backend ya creó al confirmar el cliente), y el WS sólo dispara refrescos
+// para mantenerla actualizada en tiempo real.
 
 interface DashboardStat {
   label: string;
@@ -44,9 +36,12 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
   disponible = false;
   cambiandoDisponibilidad = false;
 
-  emergenciasLive: EmergenciaLive[] = [];
   errorEmergencia: string | null = null;
+  // Lista en vivo unificada: asignaciones en pendiente del taller, alimentada
+  // por API al cargar y actualizada por WebSocket en cada evento.
   solicitudesPendientes: AsignacionTaller[] = [];
+  // Estado UI por asignacion (cargando, error) para el botón "Ver información".
+  uiAsig: Record<number, { cargando?: boolean; error?: string }> = {};
   private _wsSub?: Subscription;
 
   mostrarInfoTaller = false;
@@ -130,37 +125,17 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
   }
 
   private handleWsEvent(evt: WSEvent): void {
-    if (evt.event === 'incidente.nuevo') {
-      const data = evt.data as EmergenciaLive;
-      const exists = this.emergenciasLive.some(x => x.id_incidente === data.id_incidente);
-      if (!exists) {
-        this.emergenciasLive = [{ ...data }, ...this.emergenciasLive];
-        this.cdr.markForCheck();
-      }
-      return;
-    }
-
-    if (evt.event === 'incidente.tomado') {
-      const id = (evt.data as { id_incidente: number }).id_incidente;
-      this.emergenciasLive = this.emergenciasLive.map(e =>
-        e.id_incidente === id ? { ...e, tomado: true } : e
-      );
-      this.cdr.markForCheck();
-      return;
-    }
-
-    if (evt.event === 'incidente.asignado') {
-      const id = (evt.data as { id_incidente: number }).id_incidente;
-      this.emergenciasLive = this.emergenciasLive.map(e =>
-        e.id_incidente === id ? { ...e, mio: true, aceptando: false } : e
-      );
-      this.cdr.markForCheck();
-      this.refrescarPendientes();
-      return;
-    }
-
-    if (evt.event === 'asignacion.estado.cambio') {
-      this.refrescarPendientes();
+    // Con el flujo unificado, cualquier evento que afecte una asignación se
+    // traduce a un refresh de la lista en vivo (es persistente y consulta la
+    // API). Mantenemos el switch para claridad y por si en el futuro queremos
+    // animaciones distintas por tipo de evento.
+    switch (evt.event) {
+      case 'incidente.nuevo':
+      case 'incidente.tomado':
+      case 'incidente.asignado':
+      case 'asignacion.estado.cambio':
+        this.refrescarPendientes();
+        break;
     }
   }
 
@@ -174,42 +149,18 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Click en "Ver información" en la card live: con el nuevo flujo el cliente
-   * ya confirmó este taller en /confirmar y existe una asignacion en pendiente.
-   * Buscamos esa asignacion y redirigimos al detalle, donde el taller puede
-   * asignar técnico, aceptar formalmente, ver mensajes, etc.
+   * Click en "Ver información" en una card en vivo: navega al detalle de la
+   * asignación (asignar técnico, aceptar formalmente, mensajes, etc.).
    */
-  verInformacionEmergencia(e: EmergenciaLive): void {
-    e.aceptando = true;
-    e.error = undefined;
-    this.cdr.markForCheck();
-
-    this.asignacionesService.listar({}).subscribe({
-      next: (asignaciones) => {
-        const mia = asignaciones.find(
-          (a) => a.incidente?.id_incidente === e.id_incidente,
-        );
-        e.aceptando = false;
-        if (mia) {
-          this.router.navigate(['/dashboard/taller/solicitudes', mia.id_asignacion]);
-        } else {
-          // No hay asignacion para este taller en este incidente — quizá lo
-          // tomó otro taller antes. Mostramos el mensaje y marcamos como tomado.
-          e.tomado = true;
-          e.error = 'No tienes una asignación para este incidente todavía.';
-          this.cdr.markForCheck();
-        }
-      },
-      error: (err) => {
-        e.aceptando = false;
-        e.error = err?.error?.detail ?? 'Error consultando asignación';
-        this.cdr.markForCheck();
-      },
-    });
+  verInformacionAsignacion(s: AsignacionTaller): void {
+    this.router.navigate(['/dashboard/taller/solicitudes', s.id_asignacion]);
   }
 
-  abrirEnMaps(e: EmergenciaLive): void {
-    window.open(`https://www.google.com/maps?q=${e.latitud},${e.longitud}`, '_blank');
+  abrirEnMapsAsignacion(s: AsignacionTaller): void {
+    const lat = s.incidente?.latitud;
+    const lng = s.incidente?.longitud;
+    if (lat == null || lng == null) return;
+    window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
   }
 
   irAMensajes(idIncidente: number): void {
