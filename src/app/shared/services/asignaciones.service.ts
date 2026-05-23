@@ -121,7 +121,8 @@ export class AsignacionesService {
   }
 
   aceptarIncidenteLive(idIncidente: number): Observable<{ id_asignacion: number; id_taller: number; nuevo_estado: string }> {
-    const url = `/incidentes/${idIncidente}/aceptar`;
+    // Backend monta el router en /incidencias (no /incidentes).
+    const url = `/incidencias/${idIncidente}/aceptar`;
     return this.http.post<{ id_asignacion: number; id_taller: number; nuevo_estado: string }>(url, {});
   }
 
