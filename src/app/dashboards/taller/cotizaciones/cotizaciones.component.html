@@ -43,6 +43,7 @@
             <th>Vence</th>
             <th>Monto total</th>
             <th>Garantia</th>
+            <th>Tiempo rep.</th>
             <th></th>
           </tr>
         </thead>
@@ -60,6 +61,13 @@
                 }
               </td>
               <td>{{ c.garantia_dias ? c.garantia_dias + ' dias' : '-' }}</td>
+              <td>
+                @if (c.tiempo_estimado_min) {
+                  {{ (c.tiempo_estimado_min / 60) | number:'1.0-1' }} h
+                } @else {
+                  -
+                }
+              </td>
               <td>
                 @if (filtroEstado === 'pendiente' && !esExpirada(c)) {
                   <button class="btn-secondary" (click)="abrirResponder(c)">Responder</button>
@@ -88,6 +96,11 @@
         <div class="campo">
           <label>Garantia (dias)</label>
           <input type="number" [(ngModel)]="form.garantia_dias" min="0" max="365">
+        </div>
+        <div class="campo">
+          <label>Tiempo estimado de reparacion (minutos)</label>
+          <input type="number" [(ngModel)]="form.tiempo_estimado_min" min="0" step="15"
+                 placeholder="Ej: 180 = 3 horas">
         </div>
         <div class="campo">
           <label>Nota (opcional)</label>

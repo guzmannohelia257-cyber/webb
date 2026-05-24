@@ -63,6 +63,29 @@ header {
   gap: 16px;
 }
 
+.zonas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eef;
+  }
+
+  th {
+    background: #f6f8fa;
+    font-weight: 600;
+  }
+
+  a {
+    color: #4a90e2;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+}
+
 .kpi {
   background: white;
   border: 1px solid #ddd;

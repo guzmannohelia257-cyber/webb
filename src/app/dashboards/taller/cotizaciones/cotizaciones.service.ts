@@ -9,6 +9,7 @@ export interface Cotizacion {
   monto_servicio?: number;
   monto_repuestos?: number;
   garantia_dias?: number;
+  tiempo_estimado_min?: number;
   nota?: string;
   validez_hasta?: string;
   created_at: string;
@@ -19,6 +20,7 @@ export interface ResponderRequest {
   monto_servicio: number;
   monto_repuestos: number;
   garantia_dias?: number;
+  tiempo_estimado_min?: number;
   nota?: string;
 }
 

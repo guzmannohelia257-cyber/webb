@@ -9,12 +9,28 @@ export interface CategoriaCount {
   total: number;
 }
 
+export interface ZonaKpi {
+  lat: number;
+  lng: number;
+  total: number;
+}
+
+export interface SlaKpi {
+  total_completadas: number;
+  cumplen_sla: number;
+  porcentaje: number;
+  sla_minutos: number;
+}
+
 export interface KpiResumen {
   desde: string;
   hasta: string;
   tiempo_promedio_asignacion_min: number;
   tiempo_promedio_llegada_min: number;
   incidentes_por_categoria: CategoriaCount[];
+  casos_cancelados: number;
+  zonas_mas_incidentes: ZonaKpi[];
+  sla_cumplimiento: SlaKpi | null;
 }
 
 @Injectable({ providedIn: 'root' })

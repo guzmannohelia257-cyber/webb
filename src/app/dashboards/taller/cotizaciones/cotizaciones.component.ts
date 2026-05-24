@@ -60,6 +60,7 @@ export class CotizacionesComponent implements OnInit {
       monto_servicio: cot.monto_servicio ?? 0,
       monto_repuestos: cot.monto_repuestos ?? 0,
       garantia_dias: cot.garantia_dias,
+      tiempo_estimado_min: cot.tiempo_estimado_min,
       nota: cot.nota,
     };
     this.errorForm = null;
