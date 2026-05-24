@@ -64,7 +64,6 @@
             <th>Categoria</th>
             <th>Tarifa base (USD)</th>
             <th>Tiempo reparacion (min)</th>
-            <th>Tipo</th>
           </tr>
         </thead>
         <tbody>
@@ -97,13 +96,6 @@
                   placeholder="ej: 60"
                   style="width:90px"
                 >
-              </td>
-              <td>
-                @if (f.categoria.requiere_cotizacion) {
-                  <span class="badge cotizacion">Cotizacion previa</span>
-                } @else {
-                  <span class="badge directo">Servicio directo</span>
-                }
               </td>
             </tr>
           }
