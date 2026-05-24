@@ -15,7 +15,6 @@ export interface TallerServicio {
   id_taller_servicio?: number;
   id_taller?: number;
   id_categoria: number;
-  servicio_movil: boolean;
   tarifa_base?: number;
 }
 
@@ -33,5 +32,16 @@ export class ServiciosService {
 
   guardarServicios(servicios: TallerServicio[]): Observable<TallerServicio[]> {
     return this.http.put<TallerServicio[]>('/talleres/mi-taller/servicios', { servicios });
+  }
+
+  obtenerMiTaller(): Observable<{ tarifa_traslado?: number }> {
+    return this.http.get<{ tarifa_traslado?: number }>('/talleres/mi-taller');
+  }
+
+  actualizarTarifaKm(tarifa: number): Observable<{ tarifa_traslado: number }> {
+    return this.http.patch<{ tarifa_traslado: number }>(
+      '/talleres/mi-taller/tarifa-traslado',
+      { tarifa_traslado: tarifa },
+    );
   }
 }

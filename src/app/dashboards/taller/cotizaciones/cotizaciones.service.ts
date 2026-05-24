@@ -8,6 +8,8 @@ export interface Cotizacion {
   id_taller: number;
   monto_servicio?: number;
   monto_repuestos?: number;
+  distancia_km?: number;
+  monto_traslado?: number;
   garantia_dias?: number;
   tiempo_estimado_min?: number;
   nota?: string;

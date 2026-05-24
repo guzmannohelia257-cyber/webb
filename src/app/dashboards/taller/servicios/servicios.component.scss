@@ -23,6 +23,30 @@
   margin: 0;
 }
 
+.tarifa-km-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+
+  label {
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .small {
+    font-size: 12px;
+    margin: 4px 0 0 0;
+  }
+
+  input[type="number"] {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 10px;
+  }
+}
+
 .btn-back {
   background: none;
   border: 1px solid #d1d5db;

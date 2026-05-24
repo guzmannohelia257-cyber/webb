@@ -8,7 +8,6 @@ import { ServiciosService, Categoria, TallerServicio } from './servicios.service
 interface FilaServicio {
   categoria: Categoria;
   activo: boolean;
-  servicio_movil: boolean;
   tarifa_base: number | null;
 }
 
@@ -30,6 +29,9 @@ export class ServiciosComponent implements OnInit {
   mensaje: string | null = null;
   error: string | null = null;
 
+  tarifaKm: number = 0;
+  guardandoTarifa = false;
+
   ngOnInit(): void {
     this.cargar();
   }
@@ -45,8 +47,9 @@ export class ServiciosComponent implements OnInit {
     forkJoin({
       categorias: this.svc.listarCategorias(),
       mios: this.svc.listarMisServicios(),
+      taller: this.svc.obtenerMiTaller(),
     }).subscribe({
-      next: ({ categorias, mios }) => {
+      next: ({ categorias, mios, taller }) => {
         console.log(`[Servicios] cargar ← OK categorias=${categorias.length} mios=${mios.length}`);
         const mioPorCat = new Map(mios.map(m => [m.id_categoria, m]));
         this.filas = categorias.map(cat => {
@@ -54,10 +57,10 @@ export class ServiciosComponent implements OnInit {
           return {
             categoria: cat,
             activo: !!m,
-            servicio_movil: m?.servicio_movil ?? false,
             tarifa_base: m?.tarifa_base ?? null,
           };
         });
+        this.tarifaKm = Number(taller?.tarifa_traslado ?? 0);
         this.cargando = false;
         this.cdr.detectChanges();
       },
@@ -75,7 +78,6 @@ export class ServiciosComponent implements OnInit {
       .filter(f => f.activo)
       .map(f => ({
         id_categoria: f.categoria.id_categoria,
-        servicio_movil: f.servicio_movil,
         tarifa_base: f.tarifa_base ?? undefined,
       }));
 
@@ -90,6 +92,27 @@ export class ServiciosComponent implements OnInit {
       error: (e) => {
         this.error = e?.error?.detail ?? e?.message ?? 'Error guardando';
         this.guardando = false;
+      },
+    });
+  }
+
+  guardarTarifaKm(): void {
+    if (this.tarifaKm < 0) {
+      this.error = 'La tarifa por km no puede ser negativa';
+      return;
+    }
+    this.guardandoTarifa = true;
+    this.mensaje = null;
+    this.error = null;
+    this.svc.actualizarTarifaKm(this.tarifaKm).subscribe({
+      next: (r) => {
+        this.tarifaKm = Number(r.tarifa_traslado ?? this.tarifaKm);
+        this.mensaje = `Tarifa por km actualizada a $${this.tarifaKm.toFixed(2)}`;
+        this.guardandoTarifa = false;
+      },
+      error: (e) => {
+        this.error = e?.error?.detail ?? e?.message ?? 'Error guardando tarifa';
+        this.guardandoTarifa = false;
       },
     });
   }

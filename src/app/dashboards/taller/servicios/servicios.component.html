@@ -5,8 +5,9 @@
       <div>
         <h1>Mis servicios</h1>
         <p class="hint">
-          Marca las categorias que atiendes. La tarifa base es orientativa y ayuda
-          a los clientes a estimar el costo inicial.
+          Marca las categorias que atiendes. La tarifa base es <strong>referencial</strong>:
+          ayuda al cliente a estimar antes de salir y luego el tecnico puede ajustar
+          al cobrar segun los gastos reales del servicio.
         </p>
       </div>
     </div>
@@ -23,6 +24,33 @@
     <div class="alert error">{{ error }}</div>
   }
 
+  @if (!cargando && !error) {
+    <div class="tarifa-km-card">
+      <label for="tarifa-km">Tarifa por km recorrido (USD)</label>
+      <p class="muted small">
+        Se suma automaticamente a cada cotizacion segun la distancia GPS al cliente.
+        Ej: tarifa $2/km, cliente a 5 km → traslado $10.
+      </p>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+        <input
+          id="tarifa-km"
+          type="number"
+          [(ngModel)]="tarifaKm"
+          min="0"
+          step="0.10"
+          style="width:120px"
+        >
+        <button
+          class="btn-secondary"
+          (click)="guardarTarifaKm()"
+          [disabled]="guardandoTarifa"
+        >
+          {{ guardandoTarifa ? 'Guardando...' : 'Guardar tarifa' }}
+        </button>
+      </div>
+    </div>
+  }
+
   @if (!cargando && !error && filas.length === 0) {
     <div class="empty">No hay categorias de servicio configuradas en el sistema.</div>
   }
@@ -34,7 +62,6 @@
           <tr>
             <th>Atiende</th>
             <th>Categoria</th>
-            <th>Movil</th>
             <th>Tarifa base (USD)</th>
             <th>Tipo</th>
           </tr>
@@ -48,9 +75,6 @@
               <td>
                 <strong>{{ f.categoria.nombre }}</strong>
                 <div class="muted">{{ f.categoria.descripcion }}</div>
-              </td>
-              <td>
-                <input type="checkbox" [(ngModel)]="f.servicio_movil" [disabled]="!f.activo">
               </td>
               <td>
                 <input

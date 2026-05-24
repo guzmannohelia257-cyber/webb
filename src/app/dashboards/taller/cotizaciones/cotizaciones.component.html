@@ -55,7 +55,15 @@
               <td>{{ c.validez_hasta | date:'short' }}</td>
               <td>
                 @if (c.monto_servicio !== null && c.monto_servicio !== undefined) {
-                  ${{ (c.monto_servicio || 0) + (c.monto_repuestos || 0) }}
+                  <div>
+                    <strong>${{ (c.monto_servicio || 0) + (c.monto_repuestos || 0) + (c.monto_traslado || 0) }}</strong>
+                  </div>
+                  @if (c.distancia_km) {
+                    <div class="muted small">
+                      Servicio ${{ (c.monto_servicio || 0) + (c.monto_repuestos || 0) }} +
+                      traslado ${{ c.monto_traslado || 0 }} ({{ c.distancia_km }} km)
+                    </div>
+                  }
                 } @else {
                   <span class="muted">sin cotizar</span>
                 }
@@ -92,6 +100,12 @@
         <div class="campo">
           <label>Monto de repuestos (USD)</label>
           <input type="number" [(ngModel)]="form.monto_repuestos" min="0" step="0.01">
+        </div>
+        <div class="campo" style="background:#f3f4f6;padding:8px 10px;border-radius:6px">
+          <small class="muted">
+            El traslado se calcula automaticamente al enviar: tarifa/km × distancia GPS al cliente.
+            Configura tu tarifa por km en "Mis servicios".
+          </small>
         </div>
         <div class="campo">
           <label>Garantia (dias)</label>
