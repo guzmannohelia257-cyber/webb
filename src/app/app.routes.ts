@@ -9,7 +9,6 @@ import { ResenasComponent } from './dashboards/taller/resenas/resenas.component'
 import { HistorialComponent } from './dashboards/taller/historial/historial.component';
 import { MensajesComponent } from './dashboards/taller/mensajes/mensajes.component';
 import { ServiciosComponent } from './dashboards/taller/servicios/servicios.component';
-import { CotizacionesComponent } from './dashboards/taller/cotizaciones/cotizaciones.component';
 import { CancelacionesComponent } from './dashboards/taller/cancelaciones/cancelaciones.component';
 import { KpisComponent } from './dashboards/taller/kpis/kpis.component';
 import { UnauthorizedComponent } from './shared/pages/unauthorized.component';
@@ -48,7 +47,6 @@ export const routes: Routes = [
           { path: 'historial', component: HistorialComponent },
           { path: 'mensajes/:idIncidente', component: MensajesComponent },
           { path: 'servicios', component: ServiciosComponent },
-          { path: 'cotizaciones', component: CotizacionesComponent },
           { path: 'cancelaciones', component: CancelacionesComponent },
           { path: 'kpis', component: KpisComponent },
         ]

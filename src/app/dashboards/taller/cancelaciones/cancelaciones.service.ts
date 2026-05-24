@@ -12,6 +12,12 @@ export interface AsignacionCancelada {
   compensacion_pagada: boolean;
 }
 
+export interface TenantCancelacionConfig {
+  pct_cancel_pendiente: number;
+  pct_cancel_aceptada: number;
+  pct_cancel_en_camino: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class CancelacionesService {
   private http = inject(HttpService);
@@ -26,5 +32,16 @@ export class CancelacionesService {
 
   miTaller(): Observable<{ tarifa_traslado: number }> {
     return this.http.get<{ tarifa_traslado: number }>('/talleres/mi-taller');
+  }
+
+  miTenant(): Observable<TenantCancelacionConfig> {
+    return this.http.get<TenantCancelacionConfig>('/tenants/me');
+  }
+
+  actualizarPorcentajes(config: TenantCancelacionConfig): Observable<TenantCancelacionConfig> {
+    return this.http.patch<TenantCancelacionConfig>(
+      '/tenants/me/cancelacion-pct',
+      config,
+    );
   }
 }

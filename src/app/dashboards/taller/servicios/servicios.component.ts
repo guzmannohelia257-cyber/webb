@@ -9,6 +9,7 @@ interface FilaServicio {
   categoria: Categoria;
   activo: boolean;
   tarifa_base: number | null;
+  tiempo_estimado_min: number | null;
 }
 
 @Component({
@@ -58,6 +59,7 @@ export class ServiciosComponent implements OnInit {
             categoria: cat,
             activo: !!m,
             tarifa_base: m?.tarifa_base ?? null,
+            tiempo_estimado_min: m?.tiempo_estimado_min ?? null,
           };
         });
         this.tarifaKm = Number(taller?.tarifa_traslado ?? 0);
@@ -79,6 +81,7 @@ export class ServiciosComponent implements OnInit {
       .map(f => ({
         id_categoria: f.categoria.id_categoria,
         tarifa_base: f.tarifa_base ?? undefined,
+        tiempo_estimado_min: f.tiempo_estimado_min ?? undefined,
       }));
 
     this.guardando = true;

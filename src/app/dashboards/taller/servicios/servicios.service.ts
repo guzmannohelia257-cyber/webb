@@ -16,6 +16,7 @@ export interface TallerServicio {
   id_taller?: number;
   id_categoria: number;
   tarifa_base?: number;
+  tiempo_estimado_min?: number;
 }
 
 @Injectable({ providedIn: 'root' })

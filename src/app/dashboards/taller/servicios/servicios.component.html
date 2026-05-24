@@ -63,6 +63,7 @@
             <th>Atiende</th>
             <th>Categoria</th>
             <th>Tarifa base (USD)</th>
+            <th>Tiempo reparacion (min)</th>
             <th>Tipo</th>
           </tr>
         </thead>
@@ -84,6 +85,17 @@
                   min="0"
                   step="0.01"
                   placeholder="0"
+                >
+              </td>
+              <td>
+                <input
+                  type="number"
+                  [(ngModel)]="f.tiempo_estimado_min"
+                  [disabled]="!f.activo"
+                  min="0"
+                  step="15"
+                  placeholder="ej: 60"
+                  style="width:90px"
                 >
               </td>
               <td>

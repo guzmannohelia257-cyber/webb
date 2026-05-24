@@ -13,13 +13,8 @@
   <section class="config">
     <h2>Mi tarifa de traslado</h2>
     <p class="hint">
-      Monto base que recibes cuando un cliente cancela.
+      Monto base que recibes cuando un cliente cancela (en USD).
     </p>
-    <ul class="reglas">
-      <li>Si la asignacion estaba <strong>pendiente</strong> -> 0%</li>
-      <li>Si estaba <strong>aceptada</strong> -> 50% de esta tarifa</li>
-      <li>Si estaba <strong>en camino</strong> o <strong>llego</strong> -> 100%</li>
-    </ul>
     <div class="form-tarifa">
       <input type="number" [(ngModel)]="nuevaTarifa" min="0" max="1000">
       <span>USD</span>
@@ -32,6 +27,43 @@
       </button>
       @if (msgTarifa) {
         <span class="msg">{{ msgTarifa }}</span>
+      }
+    </div>
+  </section>
+
+  <section class="config">
+    <h2>Porcentajes de compensacion</h2>
+    <p class="hint">
+      Porcentaje de la tarifa de traslado que se cobra al cliente segun en
+      que estado estaba la asignacion al cancelar.
+    </p>
+    <div class="pct-grid">
+      <div class="pct-fila">
+        <label>Pendiente</label>
+        <input type="number" [(ngModel)]="pctConfig.pct_cancel_pendiente" min="0" max="100">
+        <span>%</span>
+      </div>
+      <div class="pct-fila">
+        <label>Aceptada</label>
+        <input type="number" [(ngModel)]="pctConfig.pct_cancel_aceptada" min="0" max="100">
+        <span>%</span>
+      </div>
+      <div class="pct-fila">
+        <label>En camino / Llego</label>
+        <input type="number" [(ngModel)]="pctConfig.pct_cancel_en_camino" min="0" max="100">
+        <span>%</span>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <button
+        class="btn-secondary"
+        (click)="guardarPorcentajes()"
+        [disabled]="guardandoPct"
+      >
+        {{ guardandoPct ? 'Guardando...' : 'Guardar porcentajes' }}
+      </button>
+      @if (msgPct) {
+        <span class="msg" style="margin-left:8px">{{ msgPct }}</span>
       }
     </div>
   </section>
