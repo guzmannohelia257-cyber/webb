@@ -1,69 +1,108 @@
 .resenas-container {
-  padding: 2rem;
-  max-width: 1000px;
+  padding: 28px 28px 64px;
+  max-width: var(--container-narrow);
   margin: 0 auto;
 }
 
 .resenas-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-subtle);
 
   .btn-back {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
-    color: #666;
-    padding: 0.5rem;
+    color: var(--ink-subtle);
+    padding: 7px 12px;
+    border-radius: var(--radius-md);
+    transition:
+      background var(--duration-fast),
+      color var(--duration-fast),
+      border-color var(--duration-fast);
 
     &:hover {
-      color: #000;
+      background: var(--overlay);
+      color: var(--ink);
+      border-color: var(--border-strong);
     }
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.028em;
     margin: 0;
-    color: #333;
+    color: var(--ink);
   }
 }
 
 .resumen-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  padding: 2rem;
-  color: white;
-  margin-bottom: 2rem;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  color: var(--ink);
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+
+  // Spotlight ámbar sutil
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 50% 80% at 10% 50%,
+      var(--brand-soft),
+      transparent 70%
+    );
+  }
 
   .resumen-stat {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 32px;
+    position: relative;
 
     .promedio-estrella {
-      font-size: 3rem;
-      font-weight: bold;
+      font-family: var(--font-mono);
+      font-size: 56px;
+      font-weight: 500;
       min-width: 120px;
       text-align: center;
+      color: var(--brand);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      
     }
 
     .resumen-texto {
       h2 {
-        margin: 0 0 0.5rem 0;
-        font-size: 1.5rem;
+        margin: 0 0 6px;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--ink);
+        letter-spacing: -0.012em;
       }
 
       p {
-        margin: 0 0 0.5rem 0;
-        opacity: 0.95;
+        margin: 0 0 8px;
+        color: var(--ink-muted);
+        font-size: 13px;
       }
 
       .estrellas-resumen {
-        font-size: 1.5rem;
+        font-size: 22px;
         letter-spacing: 0.2rem;
+        color: var(--brand);
+        
       }
     }
   }
@@ -71,116 +110,145 @@
 
 .resenas-lista {
   h2 {
-    margin-bottom: 1.5rem;
-    font-size: 1.3rem;
-    color: #333;
+    margin-bottom: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.012em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--brand);
+      
+    }
   }
 }
 
 .resena-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  border-left: 4px solid #667eea;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-left-width: 2px;
+  border-left-color: var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 10px;
+  transition: border-color var(--duration-fast), background var(--duration-fast);
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    background: var(--surface-raised);
   }
 
   &.resena-excelente {
-    border-left-color: #00a86b;
+    border-left-color: var(--success);
   }
 
   &.resena-bueno {
-    border-left-color: #ffa500;
+    border-left-color: var(--brand);
   }
 
   &.resena-mejorable {
-    border-left-color: #ff6b6b;
+    border-left-color: var(--danger);
   }
 
   .resena-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 12px;
 
     .estrellas {
-      font-size: 1.3rem;
-      letter-spacing: 0.1rem;
-      color: #ffa500;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      color: var(--brand);
+      
     }
 
     .fecha {
-      color: #999;
-      font-size: 0.9rem;
+      color: var(--ink-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
     }
   }
 
   .comentario {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #333;
-    font-style: italic;
-    margin: 1rem 0;
-    padding: 0.5rem 0 0 1rem;
-    border-left: 2px solid #e0e0e0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 12px 0;
+    padding: 0 0 0 14px;
+    border-left: 1px solid var(--border);
   }
 
   .resena-meta {
     display: flex;
-    gap: 1.5rem;
-    margin-top: 0.5rem;
+    gap: 18px;
+    margin-top: 8px;
+    flex-wrap: wrap;
 
     small {
-      color: #999;
-      font-size: 0.85rem;
+      color: var(--ink-muted);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
   }
 }
 
 .card.info-vacio {
   text-align: center;
-  padding: 3rem 2rem;
-  background: #f9f9f9;
-  border-radius: 8px;
-  border: 2px dashed #ddd;
+  padding: 44px 24px;
+  background: var(--surface-muted);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-strong);
 
   .icono {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 36px;
+    margin-bottom: 14px;
+    opacity: 0.5;
   }
 
   h2 {
-    color: #666;
-    margin: 0 0 0.5rem 0;
+    color: var(--ink-subtle);
+    margin: 0 0 6px;
+    font-size: 15px;
+    font-weight: 600;
   }
 
   p {
-    color: #999;
-    margin-bottom: 1.5rem;
+    color: var(--ink-muted);
+    margin-bottom: 0;
+    font-size: 13px;
   }
 }
 
 .loading {
   text-align: center;
-  padding: 3rem;
-  color: #999;
-  font-size: 1.1rem;
+  padding: 44px;
+  color: var(--ink-muted);
+  font-size: 13px;
 }
 
 .alert {
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  margin-bottom: 18px;
+  font-size: 13px;
+  border: 1px solid;
+  border-left-width: 2px;
 
   &.alert-error {
-    background: #fee;
-    color: #c33;
-    border: 1px solid #fcc;
+    background: var(--danger-soft);
+    color: var(--danger-ink);
+    border-color: rgba(244, 63, 94, 0.3);
+    border-left-color: var(--danger);
   }
 }
 
@@ -197,5 +265,6 @@
   .resena-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 6px;
   }
 }

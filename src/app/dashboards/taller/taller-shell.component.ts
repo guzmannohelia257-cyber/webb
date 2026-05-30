@@ -18,6 +18,7 @@ export class TallerShellComponent implements OnInit, OnDestroy {
   notificaciones: Notificacion[] = [];
   notificacionesNoLeidas = 0;
   mostrarNotificaciones = false;
+  sidebarCollapsed = false;
 
   private _notifSub?: Subscription;
 
@@ -56,6 +57,10 @@ export class TallerShellComponent implements OnInit, OnDestroy {
 
   toggleNotificaciones(): void {
     this.mostrarNotificaciones = !this.mostrarNotificaciones;
+  }
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
   marcarLeida(id: number): void {

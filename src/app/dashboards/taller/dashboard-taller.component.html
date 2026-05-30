@@ -1,28 +1,32 @@
 <div class="dashboard-main">
 
-  <section class="welcome-section">
-    <div class="welcome-row">
-      <div>
-        <h2>Bienvenido/a, {{ currentTaller?.nombre }}!</h2>
-        <p>Gestiona las solicitudes de asignación y tu taller</p>
-      </div>
-      <div class="disponibilidad-toggle">
-        <button
-          class="btn-toggle-disponibilidad"
-          [class.activo]="disponible"
-          [disabled]="cambiandoDisponibilidad"
-          (click)="toggleDisponibilidad()"
-          [title]="disponible ? 'Hacer pausa' : 'Reactivar'"
-        >
-          @if (cambiandoDisponibilidad) {
-            Cambiando…
-          } @else if (disponible) {
-            Abierto
-          } @else {
-            En pausa
-          }
-        </button>
-      </div>
+  <!-- ── Hero strip ───────────────────────────────────────────────── -->
+  <section class="hero-strip">
+    <div class="hero-strip__txt">
+      <span class="hero-strip__eyebrow">Panel del taller</span>
+      <h2 class="hero-strip__title">
+        Hola, <em>{{ currentTaller?.nombre }}</em>
+      </h2>
+      <p class="hero-strip__sub">Coordina solicitudes y atiende clientes en tiempo real.</p>
+    </div>
+
+    <div class="hero-strip__toggle">
+      <span class="hero-strip__toggle-lbl">Estado del taller</span>
+      <button
+        class="btn-toggle-disponibilidad"
+        [class.activo]="disponible"
+        [disabled]="cambiandoDisponibilidad"
+        (click)="toggleDisponibilidad()"
+        [title]="disponible ? 'Hacer pausa' : 'Reactivar'"
+      >
+        @if (cambiandoDisponibilidad) {
+          Cambiando…
+        } @else if (disponible) {
+          Abierto
+        } @else {
+          En pausa
+        }
+      </button>
     </div>
   </section>
 
@@ -40,141 +44,338 @@
     </div>
   }
 
-  <section class="solicitudes-pendientes-section">
-    <div class="section-header">
-      <h3>
-        <span class="dot-live"></span>
-        Emergencias en vivo
-        @if (solicitudesPendientes.length > 0) {
-          <span class="contador">({{ solicitudesPendientes.length }})</span>
+  <!-- ── Two-column body ───────────────────────────────────────────── -->
+  <div class="dashboard-body">
+
+    <!-- ═════════════════ MAIN COLUMN ═════════════════ -->
+    <div class="dashboard-main-col">
+
+      <!-- Emergencias en vivo -->
+      <section class="solicitudes-pendientes-section">
+        <div class="section-header">
+          <h3>
+            <span class="dot-live"></span>
+            Emergencias en vivo
+            @if (solicitudesPendientes.length > 0) {
+              <span class="contador">({{ solicitudesPendientes.length }})</span>
+            }
+          </h3>
+          <div class="section-actions">
+            <button class="btn btn-primary btn-small" (click)="irATodasSolicitudes()">
+              Ver todas →
+            </button>
+          </div>
+        </div>
+
+        @if (errorEmergencia) {
+          <div class="alert alert-error">
+            <span (click)="errorEmergencia = null" class="close-btn">&times;</span>
+            {{ errorEmergencia }}
+          </div>
         }
-      </h3>
-      <div class="section-actions">
-        <button class="btn btn-primary btn-small" (click)="irATodasSolicitudes()">
-          Ver todas
-        </button>
-      </div>
+
+        @if (solicitudesPendientes.length === 0) {
+          <div class="empty-state-card">
+            <p>Esperando emergencias en tiempo real…</p>
+            <small>Las solicitudes nuevas aparecerán aquí automáticamente.</small>
+          </div>
+        } @else {
+          <div class="solicitudes-grid">
+            @for (s of solicitudesPendientes; track s.id_asignacion) {
+              <div class="solicitud-card card-live">
+                <div class="solicitud-header">
+                  <span class="badge-estado badge-live">🔴 En vivo</span>
+                  <span class="card-time">{{ s.incidente.created_at | date:'shortTime' }}</span>
+                </div>
+                <h4>{{ s.incidente.usuario.nombre }} · {{ s.incidente.vehiculo.placa }}</h4>
+                @if (s.incidente.prioridad) {
+                  <span class="badge-prioridad prioridad-{{ s.incidente.prioridad.nivel }}">
+                    {{ etiquetaPrioridad(s.incidente.prioridad.nivel) }}
+                  </span>
+                }
+                <p class="categoria">{{ s.incidente.categoria?.nombre || 'Sin categoría' }}</p>
+                <p class="resumen">{{ s.incidente.resumen_ia || s.incidente.descripcion_usuario || '-' }}</p>
+                <button class="link-ubicacion" (click)="abrirEnMapsAsignacion(s)">
+                  📍 Ver ubicación
+                </button>
+
+                <div class="card-acciones">
+                  <button
+                    class="btn-aceptar-live"
+                    (click)="verInformacionAsignacion(s)"
+                  >
+                    VER INFORMACIÓN
+                  </button>
+                  <button
+                    class="btn-mensajes"
+                    (click)="$event.stopPropagation(); irAMensajes(s.incidente.id_incidente)"
+                    title="Abrir chat con el cliente"
+                  >
+                    Mensajes
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Earnings ribbon (horizontal, compacto) -->
+      <section class="earnings-ribbon">
+        <div class="earnings-ribbon__head">
+          <span class="earnings-ribbon__eyebrow">Resumen del mes</span>
+          <span class="earnings-ribbon__mark">●</span>
+        </div>
+        <div class="earnings-ribbon__items">
+          <div class="earnings-ribbon__item earnings-ribbon__item--primary">
+            <span class="earnings-ribbon__lbl">Total ganado</span>
+            <span class="earnings-ribbon__val">{{ gananciasMesFmt }}</span>
+          </div>
+          <div class="earnings-ribbon__item">
+            <span class="earnings-ribbon__lbl">Servicios</span>
+            <span class="earnings-ribbon__val">{{ totalServiciosMes }}</span>
+          </div>
+          <div class="earnings-ribbon__item">
+            <span class="earnings-ribbon__lbl">Ticket prom.</span>
+            <span class="earnings-ribbon__val">{{ ticketPromedioMesFmt }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Técnicos (toggleable) -->
+      @if (mostrarTecnicos) {
+        <section class="tecnicos-section">
+          <div class="tecnicos-card">
+            <div class="tecnicos-header">
+              <h3>Mis técnicos</h3>
+              <button type="button" class="btn btn-primary btn-small" (click)="abrirFormularioTecnico()">
+                + Agregar
+              </button>
+            </div>
+
+            @if (errorTecnico) {
+              <div class="alert alert-error">
+                <span (click)="errorTecnico = null" class="close-btn">&times;</span>
+                {{ errorTecnico }}
+              </div>
+            }
+
+            @if (exitoTecnico) {
+              <div class="alert alert-success">
+                <span (click)="exitoTecnico = null" class="close-btn">&times;</span>
+                {{ exitoTecnico }}
+              </div>
+            }
+
+            @if (cargandoTecnicos) {
+              <p class="loading">Cargando técnicos...</p>
+            } @else if (tecnicos && tecnicos.length > 0) {
+              <div class="tecnicos-list">
+                <div class="list-header">
+                  <span class="col-nombre">Nombre</span>
+                  <span class="col-email">Email / Acceso app</span>
+                  <span class="col-telefono">Disponible</span>
+                  <span class="col-estado">Estado</span>
+                  <span class="col-acciones">Acciones</span>
+                </div>
+                @for (tecnico of tecnicos; track tecnico.id_usuario_taller) {
+                  <div class="list-row">
+                    <span class="col-nombre">{{ tecnico.nombre }}</span>
+                    <span class="col-email">
+                      <small class="text-muted">{{ tecnico.email }}</small>
+                      <br />
+                      <small class="text-muted">{{ tecnico.telefono || '-' }}</small>
+                      <br />
+                      <small class="text-success">Acceso app activo</small>
+                    </span>
+                    <span class="col-telefono">
+                      <span class="badge" [class.activo]="tecnico.disponible">
+                        {{ tecnico.disponible ? 'Disponible' : 'Ocupado' }}
+                      </span>
+                    </span>
+                    <span class="col-estado">
+                      <span class="badge" [class.activo]="tecnico.activo">
+                        {{ tecnico.activo ? 'Activo' : 'Inactivo' }}
+                      </span>
+                    </span>
+                    <span class="col-acciones">
+                      <button type="button" class="btn-icon edit" (click)="editarTecnico(tecnico)" title="Editar" aria-label="Editar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                      </button>
+                      <button type="button" class="btn-icon delete" (click)="eliminarTecnico(tecnico)" title="Eliminar" aria-label="Eliminar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
+                      </button>
+                    </span>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="empty-state">
+                No hay técnicos registrados.
+                <button type="button" class="link-btn" (click)="abrirFormularioTecnico()">
+                  Agregar uno ahora
+                </button>
+              </p>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Servicios (toggleable) -->
+      @if (mostrarServicios) {
+        <section class="servicios-section">
+          <div class="servicios-card">
+            <div class="servicios-header">
+              <div>
+                <h3>Mis servicios</h3>
+                <p class="servicios-hint">Marca los tipos de problemas que atiendes.</p>
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary btn-small"
+                (click)="guardarServicios()"
+                [disabled]="guardandoServicios || cargandoServicios"
+              >
+                {{ guardandoServicios ? 'Guardando…' : 'Guardar' }}
+              </button>
+            </div>
+
+            @if (cargandoServicios) {
+              <p class="loading">Cargando servicios...</p>
+            } @else {
+              <div class="categorias-grid">
+                @for (cat of categorias; track cat.id_categoria) {
+                  <label class="categoria-chip" [class.seleccionada]="tieneServicio(cat.id_categoria)">
+                    <input type="checkbox" [checked]="tieneServicio(cat.id_categoria)" (change)="toggleServicio(cat.id_categoria)">
+                    <span>{{ cat.nombre }}</span>
+                  </label>
+                }
+                @if (categorias.length === 0) {
+                  <span class="sin-categorias">No hay categorías disponibles</span>
+                }
+              </div>
+              @if (misServicios.size > 0) {
+                <p class="servicios-resumen">{{ misServicios.size }} servicio(s) seleccionado(s)</p>
+              } @else {
+                <p class="servicios-advertencia">Sin servicios seleccionados no recibirás solicitudes</p>
+              }
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Información del taller (toggleable) -->
+      @if (mostrarInfoTaller) {
+        <section class="taller-info">
+          <div class="taller-card">
+            <h3>Información del taller</h3>
+            @if (cargandoInfoTaller) {
+              <p class="loading">Cargando información del taller...</p>
+            } @else if (taller) {
+              <div class="taller-details">
+                <div class="detail-row">
+                  <span class="label">Nombre</span>
+                  <span class="value">{{ taller.nombre }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Dirección</span>
+                  <span class="value">{{ taller.direccion }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Teléfono</span>
+                  <span class="value">{{ taller.telefono }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Email</span>
+                  <span class="value">{{ taller.email }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Descripción</span>
+                  <span class="value">{{ taller.descripcion }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Estado</span>
+                  <span class="value badge" [class.activo]="taller.activo">
+                    {{ taller.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Disponibilidad</span>
+                  <span class="value badge" [class.activo]="taller.disponible">
+                    {{ taller.disponible ? 'Recibiendo solicitudes' : 'En pausa' }}
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Verificado</span>
+                  <span class="value badge" [class.verificado]="taller.verificado">
+                    {{ taller.verificado ? 'Verificado' : 'Pendiente' }}
+                  </span>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-small" (click)="abrirFormularioEdicion()">Editar datos</button>
+            } @else {
+              <p class="empty-state">No se pudo cargar la información del taller</p>
+            }
+          </div>
+        </section>
+      }
     </div>
 
-    @if (errorEmergencia) {
-      <div class="alert alert-error">
-        <span (click)="errorEmergencia = null" class="close-btn">&times;</span>
-        {{ errorEmergencia }}
-      </div>
-    }
+    <!-- ═════════════════ SIDE COLUMN (sticky) ═════════════════ -->
+    <aside class="dashboard-side-col">
 
-    @if (solicitudesPendientes.length === 0) {
-      <div class="empty-state-card">
-        <p>Esperando emergencias en tiempo real…</p>
-        <small>Las solicitudes nuevas aparecerán aquí automáticamente.</small>
+      <!-- Stats list (compacta, no grid de 4) -->
+      <div class="side-block stats-list">
+        <div class="side-block__head">
+          <span class="side-block__eyebrow">Hoy</span>
+        </div>
+        @for (stat of stats; track stat.label; let i = $index) {
+          <div class="stat-row">
+            <span class="stat-row__icon">{{ stat.icon }}</span>
+            <span class="stat-row__label">{{ stat.label }}</span>
+            <span class="stat-row__value">{{ stat.value }}</span>
+          </div>
+        }
       </div>
-    } @else {
-      <div class="solicitudes-grid">
-        @for (s of solicitudesPendientes; track s.id_asignacion) {
-          <div class="solicitud-card card-live">
-            <div class="solicitud-header">
-              <span class="badge-estado badge-live">🔴 En vivo</span>
-              <span class="card-time">{{ s.incidente.created_at | date:'shortTime' }}</span>
-            </div>
-            <h4>{{ s.incidente.usuario.nombre }} · {{ s.incidente.vehiculo.placa }}</h4>
-            @if (s.incidente.prioridad) {
-              <span class="badge-prioridad prioridad-{{ s.incidente.prioridad.nivel }}">
-                {{ etiquetaPrioridad(s.incidente.prioridad.nivel) }}
-              </span>
-            }
-            <p class="categoria">{{ s.incidente.categoria?.nombre || 'Sin categoría' }}</p>
-            <p class="resumen">{{ s.incidente.resumen_ia || s.incidente.descripcion_usuario || '-' }}</p>
-            <button class="link-ubicacion" (click)="abrirEnMapsAsignacion(s)">
-              📍 Ver ubicación
+
+      <!-- Quick actions vertical -->
+      <div class="side-block">
+        <div class="side-block__head">
+          <span class="side-block__eyebrow">Acciones rápidas</span>
+        </div>
+        <div class="quick-list">
+          @for (action of quickActions; track action.action) {
+            <button class="quick-row" (click)="handleAction(action.action)">
+              <span class="quick-row__icon">{{ action.icon }}</span>
+              <span class="quick-row__label">{{ action.label }}</span>
+              <span class="quick-row__arrow" aria-hidden="true">→</span>
             </button>
-
-            <div class="card-acciones">
-              <button
-                class="btn-aceptar-live"
-                (click)="verInformacionAsignacion(s)"
-              >
-                VER INFORMACIÓN
-              </button>
-              <button
-                class="btn-mensajes"
-                (click)="$event.stopPropagation(); irAMensajes(s.incidente.id_incidente)"
-                title="Abrir chat con el cliente"
-              >
-                Mensajes
-              </button>
-            </div>
-          </div>
-        }
+          }
+        </div>
       </div>
-    }
-  </section>
 
-  <section class="info-toggle-section">
-    <button type="button" class="btn btn-primary" (click)="toggleInfoTaller()">
-      {{ mostrarInfoTaller ? 'Ocultar' : 'Ver' }} información del taller
-    </button>
-    <button type="button" class="btn btn-primary" (click)="toggleTecnicos()">
-      {{ mostrarTecnicos ? 'Ocultar' : 'Ver' }} mis técnicos
-    </button>
-    <button type="button" class="btn btn-primary" (click)="toggleServicios()">
-      {{ mostrarServicios ? 'Ocultar' : 'Ver' }} mis servicios
-    </button>
-  </section>
-
-  @if (mostrarInfoTaller) {
-    <section class="taller-info">
-      <div class="taller-card">
-        <h3>Información del taller</h3>
-        @if (cargandoInfoTaller) {
-          <p class="loading">Cargando información del taller...</p>
-        } @else if (taller) {
-          <div class="taller-details">
-            <div class="detail-row">
-              <span class="label">Nombre:</span>
-              <span class="value">{{ taller.nombre }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Dirección:</span>
-              <span class="value">{{ taller.direccion }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Teléfono:</span>
-              <span class="value">{{ taller.telefono }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Email:</span>
-              <span class="value">{{ taller.email }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Descripción:</span>
-              <span class="value">{{ taller.descripcion }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Estado:</span>
-              <span class="value badge" [class.activo]="taller.activo">
-                {{ taller.activo ? 'Activo' : 'Inactivo' }}
-              </span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Disponibilidad</span>
-              <span class="value badge" [class.activo]="taller.disponible">
-                {{ taller.disponible ? 'Recibiendo solicitudes' : 'En pausa' }}
-              </span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Verificado</span>
-              <span class="value badge" [class.verificado]="taller.verificado">
-                {{ taller.verificado ? 'Verificado' : 'Pendiente' }}
-              </span>
-            </div>
-          </div>
-          <button class="btn btn-primary" (click)="abrirFormularioEdicion()">Editar datos</button>
-        } @else {
-          <p class="empty-state">No se pudo cargar la información del taller</p>
-        }
+      <!-- Mini-nav para abrir secciones (reemplaza los 3 botones grandes) -->
+      <div class="side-block">
+        <div class="side-block__head">
+          <span class="side-block__eyebrow">Configuración</span>
+        </div>
+        <div class="mini-nav">
+          <button type="button" class="mini-nav__item" [class.active]="mostrarInfoTaller" (click)="toggleInfoTaller()">
+            <span>Información del taller</span>
+            <span class="mini-nav__chev">{{ mostrarInfoTaller ? '−' : '+' }}</span>
+          </button>
+          <button type="button" class="mini-nav__item" [class.active]="mostrarTecnicos" (click)="toggleTecnicos()">
+            <span>Mis técnicos</span>
+            <span class="mini-nav__chev">{{ mostrarTecnicos ? '−' : '+' }}</span>
+          </button>
+          <button type="button" class="mini-nav__item" [class.active]="mostrarServicios" (click)="toggleServicios()">
+            <span>Mis servicios</span>
+            <span class="mini-nav__chev">{{ mostrarServicios ? '−' : '+' }}</span>
+          </button>
+        </div>
       </div>
-    </section>
-  }
+    </aside>
+  </div>
 
   <!-- Modal de Edición -->
   @if (mostrarFormularioEdicion) {
@@ -246,160 +447,6 @@
     </div>
   }
 
-  <section class="stats-section">
-    <div class="stats-grid">
-      @for (stat of stats; track stat.label) {
-        <div class="stat-card">
-          <span class="stat-icon">{{ stat.icon }}</span>
-          <p class="stat-label">{{ stat.label }}</p>
-          <p class="stat-value">{{ stat.value }}</p>
-        </div>
-      }
-    </div>
-  </section>
-
-  <section class="earnings-section">
-    <div class="earnings-card">
-      <h3>Resumen del mes</h3>
-      <div class="earnings-grid">
-        <div class="earnings-item">
-          <p class="earnings-label">Total ganado</p>
-          <p class="earnings-value">{{ gananciasMesFmt }}</p>
-        </div>
-        <div class="earnings-item">
-          <p class="earnings-label">Servicios completados</p>
-          <p class="earnings-value">{{ totalServiciosMes }}</p>
-        </div>
-        <div class="earnings-item">
-          <p class="earnings-label">Ticket promedio</p>
-          <p class="earnings-value">{{ ticketPromedioMesFmt }}</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Sección de Técnicos -->
-  @if (mostrarTecnicos) {
-  <section class="tecnicos-section">
-    <div class="tecnicos-card">
-      <div class="tecnicos-header">
-        <h3>Mis técnicos</h3>
-        <button type="button" class="btn btn-primary" (click)="abrirFormularioTecnico()">
-          Agregar técnico
-        </button>
-      </div>
-
-      @if (errorTecnico) {
-        <div class="alert alert-error">
-          <span (click)="errorTecnico = null" class="close-btn">&times;</span>
-          {{ errorTecnico }}
-        </div>
-      }
-
-      @if (exitoTecnico) {
-        <div class="alert alert-success">
-          <span (click)="exitoTecnico = null" class="close-btn">&times;</span>
-          {{ exitoTecnico }}
-        </div>
-      }
-
-      @if (cargandoTecnicos) {
-        <p class="loading">Cargando técnicos...</p>
-      } @else if (tecnicos && tecnicos.length > 0) {
-        <div class="tecnicos-list">
-          <div class="list-header">
-            <span class="col-nombre">Nombre</span>
-            <span class="col-email">Email / Acceso app</span>
-            <span class="col-telefono">Disponible</span>
-            <span class="col-estado">Estado</span>
-            <span class="col-acciones">Acciones</span>
-          </div>
-          @for (tecnico of tecnicos; track tecnico.id_usuario_taller) {
-            <div class="list-row">
-              <span class="col-nombre">{{ tecnico.nombre }}</span>
-              <span class="col-email">
-                <small class="text-muted">{{ tecnico.email }}</small>
-                <br />
-                <small class="text-muted">{{ tecnico.telefono || '-' }}</small>
-                <br />
-                <small class="text-success">Acceso app activo</small>
-              </span>
-              <span class="col-telefono">
-                <span class="badge" [class.activo]="tecnico.disponible">
-                  {{ tecnico.disponible ? 'Disponible' : 'Ocupado' }}
-                </span>
-              </span>
-              <span class="col-estado">
-                <span class="badge" [class.activo]="tecnico.activo">
-                  {{ tecnico.activo ? 'Activo' : 'Inactivo' }}
-                </span>
-              </span>
-              <span class="col-acciones">
-                <button type="button" class="btn-icon edit" (click)="editarTecnico(tecnico)" title="Editar" aria-label="Editar">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                <button type="button" class="btn-icon delete" (click)="eliminarTecnico(tecnico)" title="Eliminar" aria-label="Eliminar">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
-                </button>
-              </span>
-            </div>
-          }
-        </div>
-      } @else {
-        <p class="empty-state">
-          No hay técnicos registrados.
-          <button type="button" class="link-btn" (click)="abrirFormularioTecnico()">
-            Agregar uno ahora
-          </button>
-        </p>
-      }
-    </div>
-  </section>
-  }
-
-  <!-- Sección de Servicios -->
-  @if (mostrarServicios) {
-    <section class="servicios-section">
-      <div class="servicios-card">
-        <div class="servicios-header">
-          <div>
-            <h3>Mis servicios</h3>
-            <p class="servicios-hint">Marca los tipos de problemas que atiendes. El motor de asignación usará esta lista para enviarte solicitudes.</p>
-          </div>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="guardarServicios()"
-            [disabled]="guardandoServicios || cargandoServicios"
-          >
-            {{ guardandoServicios ? 'Guardando…' : 'Guardar cambios' }}
-          </button>
-        </div>
-
-        @if (cargandoServicios) {
-          <p class="loading">Cargando servicios...</p>
-        } @else {
-          <div class="categorias-grid">
-            @for (cat of categorias; track cat.id_categoria) {
-              <label class="categoria-chip" [class.seleccionada]="tieneServicio(cat.id_categoria)">
-                <input type="checkbox" [checked]="tieneServicio(cat.id_categoria)" (change)="toggleServicio(cat.id_categoria)">
-                <span>{{ cat.nombre }}</span>
-              </label>
-            }
-            @if (categorias.length === 0) {
-              <span class="sin-categorias">No hay categorías disponibles</span>
-            }
-          </div>
-          @if (misServicios.size > 0) {
-            <p class="servicios-resumen">{{ misServicios.size }} servicio(s) seleccionado(s)</p>
-          } @else {
-            <p class="servicios-advertencia">Sin servicios seleccionados no recibirás solicitudes</p>
-          }
-        }
-      </div>
-    </section>
-  }
-
   <!-- Modal de Agregar/Editar Técnico -->
   @if (mostrarFormularioTecnico) {
     <div class="modal-overlay" (click)="cerrarFormularioTecnico()">
@@ -464,16 +511,4 @@
       </div>
     </div>
   }
-
-  <section class="quick-actions">
-    <h3>Acciones rápidas</h3>
-    <div class="actions-grid">
-      @for (action of quickActions; track action.action) {
-        <button class="action-card" (click)="handleAction(action.action)">
-          <span class="action-icon">{{ action.icon }}</span>
-          <span class="action-label">{{ action.label }}</span>
-        </button>
-      }
-    </div>
-  </section>
 </div>

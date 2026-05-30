@@ -25,10 +25,15 @@
   top: 0;
   width: 24px;
   height: 24px;
-  background: linear-gradient(180deg, #b11d27 0%, #7c1419 100%);
+  background: linear-gradient(180deg, #c26849 0%, #984b30 100%);
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
-  box-shadow: 0 8px 16px rgba(177, 29, 39, 0.28);
+  box-shadow:
+    0 10px 18px rgba(194, 104, 73, 0.32);
+}
+
+.pin-taller-marker .pin-drop::after {
+  background: #ffffff;
 }
 
 .pin-taller-marker .pin-drop::after {

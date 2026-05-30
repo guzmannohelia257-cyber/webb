@@ -23,7 +23,7 @@
     padding: 6px 12px;
     background: var(--danger-soft);
     color: var(--danger-ink);
-    border: 1px solid rgba(177, 29, 39, 0.3);
+    border: 1px solid rgba(244, 63, 94, 0.32);
     border-radius: var(--radius-pill);
     font-size: 12px;
     font-weight: 700;
@@ -82,13 +82,13 @@
     &.activo {
       background: var(--brand-soft);
       color: var(--brand-ink);
-      border-color: rgba(177, 29, 39, 0.3);
+      border-color: rgba(244, 63, 94, 0.32);
     }
 
     &.filtro-live.activo {
       background: var(--danger-soft);
       color: var(--danger-ink);
-      border-color: rgba(177, 29, 39, 0.4);
+      border-color: rgba(244, 63, 94, 0.4);
     }
 
     .count {
@@ -108,7 +108,7 @@
   &.alert-error {
     background: var(--danger-soft);
     color: var(--danger-ink);
-    border: 1px solid rgba(177, 29, 39, 0.2);
+    border: 1px solid rgba(244, 63, 94, 0.28);
   }
 }
 
@@ -231,23 +231,23 @@
     opacity: 0.7;
   }
 
-  &.badge-pendiente  { background: var(--warning-soft);  color: var(--warning-ink);  border-color: rgba(180,83,9,0.2); }
-  &.badge-aceptada   { background: var(--success-soft);  color: var(--success-ink);  border-color: rgba(21,128,61,0.2); }
+  &.badge-pendiente  { background: var(--warning-soft);  color: var(--warning-ink);  border-color: rgba(245, 180, 0, 0.34); }
+  &.badge-aceptada   { background: var(--success-soft);  color: var(--success-ink);  border-color: rgba(16, 185, 129, 0.3); }
   &.badge-rechazada  { background: var(--danger-soft);   color: var(--danger-ink);   border-color: rgba(177,29,39,0.2); }
-  &.badge-en_camino  { background: var(--indigo-soft);   color: var(--indigo-ink);   border-color: rgba(55,48,163,0.2); }
-  &.badge-completada { background: var(--slate-soft);    color: var(--slate-ink);    border-color: rgba(31,41,55,0.15); }
+  &.badge-en_camino  { background: var(--indigo-soft);   color: var(--indigo-ink);   border-color: rgba(139, 92, 246, 0.3); }
+  &.badge-completada { background: var(--slate-soft);    color: var(--slate-ink);    border-color: rgba(100, 116, 139, 0.32); }
 
   &.badge-prioridad {
     &::before { display: none; }
     &.prioridad-alta  { background: var(--danger-soft);  color: var(--danger-ink);  border-color: rgba(177,29,39,0.2); }
-    &.prioridad-media { background: var(--warning-soft); color: var(--warning-ink); border-color: rgba(180,83,9,0.2); }
-    &.prioridad-baja  { background: var(--success-soft); color: var(--success-ink); border-color: rgba(21,128,61,0.2); }
+    &.prioridad-media { background: var(--warning-soft); color: var(--warning-ink); border-color: rgba(245, 180, 0, 0.34); }
+    &.prioridad-baja  { background: var(--success-soft); color: var(--success-ink); border-color: rgba(16, 185, 129, 0.3); }
   }
 
   &.badge-live-card {
     background: var(--danger-soft);
     color: var(--danger-ink);
-    border-color: rgba(177, 29, 39, 0.3);
+    border-color: rgba(244, 63, 94, 0.32);
     animation: live-pulse 1.6s ease-in-out infinite;
     &::before { display: none; }
   }
@@ -256,11 +256,11 @@
 // ── Live incident cards ──────────────────────────────────────────
 .solicitud-card.card-live {
   cursor: default;
-  border-color: rgba(177, 29, 39, 0.25);
+  border-color: rgba(244, 63, 94, 0.3);
 
   &:hover {
     transform: none;
-    border-color: rgba(177, 29, 39, 0.4);
+    border-color: rgba(244, 63, 94, 0.4);
   }
 
   &::before {
@@ -275,7 +275,7 @@
   }
 
   &.mia {
-    border-color: rgba(21, 128, 61, 0.4);
+    border-color: rgba(16, 185, 129, 0.4);
     &::before { background: var(--success); }
   }
 
@@ -311,17 +311,19 @@
     width: 100%;
     padding: 10px 14px;
     background: var(--brand);
-    color: white;
-    border: none;
+    color: var(--ink-inverse);
+    border: 1px solid var(--brand);
     border-radius: var(--radius-md);
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.06em;
     cursor: pointer;
+    box-shadow: var(--shadow-brand-sm), inset 0 1px 0 rgba(255, 255, 255, 0.22);
     transition: background var(--duration-fast), transform var(--duration-fast);
 
     &:hover:not(:disabled) {
-      background: var(--brand-strong, var(--brand));
+      background: var(--brand-bright);
+      border-color: var(--brand-bright);
       transform: translateY(-1px);
     }
 

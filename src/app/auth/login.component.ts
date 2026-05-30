@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService, LoginTallerResponse, LoginAdminResponse } from '../shared/services/auth.service';
 
 type TipoRol = 'taller' | 'admin';
@@ -16,7 +16,7 @@ interface RolOption {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -25,10 +25,11 @@ export class LoginComponent {
   loading = signal(false);
   error = signal<string | null>(null);
   tipoSeleccionado = signal<TipoRol>('taller');
+  year = new Date().getFullYear();
 
   roles: RolOption[] = [
-    { tipo: 'taller', name: 'Taller (Gerente)', email: 'tallerexcelente.demo@gmail.com', password: 'taller123!' },
-    { tipo: 'admin', name: 'Admin', email: 'admin.flujoemergencia@gmail.com', password: 'admin123!' }
+    { tipo: 'taller', name: 'Taller (Gerente)', email: 'autorescate.scz@gmail.com', password: 'taller2026#' },
+    { tipo: 'admin', name: 'Admin', email: 'admin.general@gmail.com', password: 'admin2026#' }
   ];
 
   constructor(

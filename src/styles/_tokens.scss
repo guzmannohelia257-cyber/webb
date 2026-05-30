@@ -1,67 +1,121 @@
-// Design tokens — Flujo Emergencia
-// Single source of truth for color, spacing, radii, typography, shadows.
+// =================================================================
+// Design tokens — Flujo Emergencia · SOFT CREAM AESTHETIC
+// =================================================================
+// Paleta calida tipo papel/notion/things 3. Crema como fondo,
+// terracota mate como acento de marca (no rojo agresivo,
+// "warm emergency"), sombras suaves y tipografia airosa.
 
 :root {
-  // Brand
-  --brand: #b11d27;
-  --brand-dark: #7c1419;
-  --brand-darker: #4a0f14;
-  --brand-soft: #fce7e9;
-  --brand-ink: #4a0f14;
+  // ── Brand · terracota mate ──────────────────────────────────────
+  --brand: #c26849;
+  --brand-bright: #d6815e;
+  --brand-dark: #984b30;
+  --brand-darker: #6d3621;
+  --brand-soft: #f3dccf;
+  --brand-softer: #f9ece2;
+  --brand-ink: #6d3621;
+  --brand-glow: 0 6px 18px -6px rgba(194, 104, 73, 0.32);
 
-  // Ink / text
-  --ink: #18181b;
-  --ink-subtle: #52525b;
-  --ink-muted: #8a8a93;
-  --ink-faint: #b4b4bc;
+  // ── Ink (text) ──────────────────────────────────────────────────
+  // Nunca puro negro: marron-grafito calido.
+  --ink: #2d2a24;
+  --ink-subtle: #5a5246;
+  --ink-muted: #8a7e6d;
+  --ink-faint: #beb3a0;
+  --ink-inverse: #ffffff;
 
-  // Surfaces
-  --surface: #ffffff;
-  --surface-muted: #fafaf7;
-  --background: #f4f2ed;
-  --overlay: #f0ede6;
+  // ── Surfaces ────────────────────────────────────────────────────
+  --canvas: #ebe3d0;
+  --background: #f2ecdc;
+  --surface: #fbf6e9;
+  --surface-muted: #f6efde;
+  --surface-raised: #ffffff;
+  --surface-overlay: #ffffff;
+  --overlay: #ece3cc;
+  --tint: rgba(45, 42, 36, 0.025);
 
-  // Borders
-  --border: #e7e4dd;
-  --border-subtle: #f0ede6;
-  --border-strong: #d6d3cb;
+  // ── Borders ─────────────────────────────────────────────────────
+  --border: #e0d6bf;
+  --border-subtle: #ebe2cb;
+  --border-strong: #c8bb9d;
+  --border-active: var(--brand);
+  --hairline: rgba(45, 42, 36, 0.08);
+  --hairline-strong: rgba(45, 42, 36, 0.14);
 
-  // Accents
-  --amber: #b45309;
-  --amber-soft: #fef3c7;
-  --amber-ink: #7c2d12;
-  --forest: #15803d;
-  --forest-soft: #dcfce7;
-  --forest-ink: #14532d;
-  --slate: #1f2937;
-  --slate-soft: #e5e7eb;
-  --slate-ink: #0b1220;
-  --indigo: #3730a3;
-  --indigo-soft: #e0e7ff;
-  --indigo-ink: #1e1b4b;
+  // ── Accents · paleta pastel ────────────────────────────────────
+  // Todos mate, ninguno saturado: el aesthetic depende de la
+  // restriccion cromatica.
+  --sage: #7a9277;
+  --sage-soft: #e2ebde;
+  --sage-ink: #3e5a3d;
 
-  // Danger / success
-  --danger: var(--brand);
-  --danger-soft: var(--brand-soft);
-  --danger-ink: var(--brand-ink);
-  --success: var(--forest);
-  --success-soft: var(--forest-soft);
-  --success-ink: var(--forest-ink);
-  --warning: var(--amber);
-  --warning-soft: var(--amber-soft);
-  --warning-ink: var(--amber-ink);
+  --sky: #6f8eab;
+  --sky-soft: #e0e8f0;
+  --sky-ink: #355068;
 
-  // Gradients
-  --grad-brand: linear-gradient(135deg, #b11d27 0%, #7c1419 100%);
+  --gold: #b8923f;
+  --gold-soft: #f1e7c8;
+  --gold-ink: #6b5118;
+
+  --rose: #b85c68;
+  --rose-soft: #f0d7da;
+  --rose-ink: #6b2b34;
+
+  --lilac: #9d8bb4;
+  --lilac-soft: #e8e2ef;
+  --lilac-ink: #4e3f63;
+
+  // Legacy aliases (componentes referencian estos nombres)
+  --amber: var(--gold);
+  --amber-soft: var(--gold-soft);
+  --amber-ink: var(--gold-ink);
+  --forest: var(--sage);
+  --forest-soft: var(--sage-soft);
+  --forest-ink: var(--sage-ink);
+  --slate: var(--sky);
+  --slate-soft: var(--sky-soft);
+  --slate-ink: var(--sky-ink);
+  --indigo: var(--lilac);
+  --indigo-soft: var(--lilac-soft);
+  --indigo-ink: var(--lilac-ink);
+  --cyan: var(--sky);
+  --cyan-soft: var(--sky-soft);
+  --cyan-ink: var(--sky-ink);
+  --emerald: var(--sage);
+  --emerald-soft: var(--sage-soft);
+  --emerald-ink: var(--sage-ink);
+  --violet: var(--lilac);
+  --violet-soft: var(--lilac-soft);
+  --violet-ink: var(--lilac-ink);
+
+  // ── Semantic ───────────────────────────────────────────────────
+  --danger: var(--rose);
+  --danger-soft: var(--rose-soft);
+  --danger-ink: var(--rose-ink);
+  --success: var(--sage);
+  --success-soft: var(--sage-soft);
+  --success-ink: var(--sage-ink);
+  --warning: var(--gold);
+  --warning-soft: var(--gold-soft);
+  --warning-ink: var(--gold-ink);
+
+  // ── Gradients ──────────────────────────────────────────────────
+  --grad-brand: linear-gradient(135deg, #c26849 0%, #984b30 100%);
   --grad-brand-deep: linear-gradient(
     135deg,
-    #b11d27 0%,
-    #7c1419 55%,
-    #4a0f14 100%
+    #c26849 0%,
+    #984b30 50%,
+    #6d3621 100%
   );
-  --grad-dusk: linear-gradient(180deg, #1f2937 0%, #0b1220 100%);
+  --grad-paper: linear-gradient(180deg, #fbf6e9 0%, #f2ecdc 100%);
+  --grad-dusk: linear-gradient(180deg, #5a5246 0%, #2d2a24 100%);
+  --grad-peach: radial-gradient(
+    ellipse 60% 50% at 80% 0%,
+    rgba(214, 129, 94, 0.18),
+    transparent 70%
+  );
 
-  // Spacing scale (8pt grid)
+  // ── Spacing (4pt grid) ──────────────────────────────────────────
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -73,41 +127,55 @@
   --space-9: 56px;
   --space-10: 72px;
 
-  // Radii
+  // ── Radii · mas redondeados (aesthetic feel) ───────────────────
   --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
   --radius-pill: 999px;
 
-  // Shadows — soft, multi-layer (designer feel)
-  --shadow-xs: 0 1px 2px rgba(24, 24, 27, 0.04);
-  --shadow-sm: 0 1px 2px rgba(24, 24, 27, 0.04),
-    0 1px 4px rgba(24, 24, 27, 0.04);
-  --shadow-md: 0 2px 4px rgba(24, 24, 27, 0.03),
-    0 6px 16px rgba(24, 24, 27, 0.06);
-  --shadow-lg: 0 4px 8px rgba(24, 24, 27, 0.04),
-    0 16px 32px rgba(24, 24, 27, 0.08);
-  --shadow-xl: 0 6px 12px rgba(24, 24, 27, 0.05),
-    0 24px 48px rgba(24, 24, 27, 0.12);
-  --shadow-brand: 0 12px 24px rgba(177, 29, 39, 0.24);
-  --shadow-brand-sm: 0 4px 12px rgba(177, 29, 39, 0.18);
+  // ── Shadows · soft & warm ──────────────────────────────────────
+  --shadow-xs: 0 1px 2px rgba(45, 42, 36, 0.04);
+  --shadow-sm: 0 1px 3px rgba(45, 42, 36, 0.05),
+    0 1px 1px rgba(45, 42, 36, 0.03);
+  --shadow-md: 0 2px 4px rgba(45, 42, 36, 0.04),
+    0 12px 24px -8px rgba(45, 42, 36, 0.12);
+  --shadow-lg: 0 4px 8px rgba(45, 42, 36, 0.05),
+    0 24px 48px -12px rgba(45, 42, 36, 0.18);
+  --shadow-xl: 0 8px 16px rgba(45, 42, 36, 0.06),
+    0 40px 72px -16px rgba(45, 42, 36, 0.24);
+  --shadow-brand: 0 16px 32px -10px rgba(194, 104, 73, 0.32);
+  --shadow-brand-sm: 0 4px 12px -2px rgba(194, 104, 73, 0.22);
 
-  // Typography
-  --font-sans: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto,
-    Helvetica, Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular,
-    Menlo, monospace;
+  // ── Rings (focus) ─────────────────────────────────────────────
+  --ring-brand: 0 0 0 4px rgba(194, 104, 73, 0.16);
+  --ring-focus: 0 0 0 4px rgba(194, 104, 73, 0.14);
+  --ring-danger: 0 0 0 4px rgba(184, 92, 104, 0.16);
 
-  // Motion
+  // ── Typography ────────────────────────────────────────────────
+  // Inter para body. Fraunces (serif) opcional para display headings.
+  --font-sans: 'Inter', 'Söhne', 'Segoe UI', -apple-system, BlinkMacSystemFont,
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Fraunces', 'Source Serif Pro', 'Times New Roman',
+    Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace,
+    SFMono-Regular, Menlo, monospace;
+
+  // ── Motion ────────────────────────────────────────────────────
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.4, 1.4, 0.5, 1);
-  --duration-fast: 120ms;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 140ms;
   --duration: 220ms;
-  --duration-slow: 380ms;
+  --duration-slow: 420ms;
 
-  // Layout
-  --container-max: 1240px;
-  --header-h: 72px;
+  // ── Layout ────────────────────────────────────────────────────
+  --container-max: 1280px;
+  --container-narrow: 980px;
+  --header-h: 64px;
+
+  --bg: var(--background);
+
+  color-scheme: light;
 }

@@ -13,9 +13,9 @@ import { finalize } from 'rxjs/operators';
   template: `
     <div class="historial-container">
       <div class="historial-header">
-        <div style="display:flex;align-items:center;gap:12px">
-          <button (click)="volver()" style="background:none;border:1px solid #d1d5db;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:14px;color:#374151">← Volver</button>
-          <h2 style="margin:0">Historial de Atenciones</h2>
+        <div style="display:flex;align-items:center;gap:14px">
+          <button (click)="volver()" class="btn-back">← Volver</button>
+          <h2 style="margin:0">Historial de atenciones</h2>
         </div>
         <div class="filtros">
           <label>
@@ -81,23 +81,92 @@ import { finalize } from 'rxjs/operators';
     </div>
   `,
   styles: [`
-    .historial-container { padding: 24px; }
-    .historial-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
-    .historial-header h2 { margin: 0; }
-    .filtros { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-    .filtros label { display: flex; flex-direction: column; font-size: 12px; gap: 4px; }
-    .filtros input { padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; }
-    .loading, .error-msg, .empty { text-align: center; padding: 32px; color: #666; }
-    .error-msg { color: #d32f2f; }
-    .total-text { color: #666; font-size: 14px; margin-bottom: 12px; }
-    .tabla-historial { width: 100%; border-collapse: collapse; font-size: 14px; }
-    .tabla-historial th, .tabla-historial td { padding: 10px 12px; border-bottom: 1px solid #eee; text-align: left; }
-    .tabla-historial th { background: #f5f5f5; font-weight: 600; }
-    .tabla-historial tr:hover td { background: #fafafa; }
-    .badge { padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-    .badge.completada { background: #e8f5e9; color: #2e7d32; }
-    .paginacion { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 24px; }
-    .paginacion button { padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #fff; }
+    .historial-container { padding: 28px 28px 64px; max-width: var(--container-max); margin: 0 auto; }
+    .historial-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 22px; padding-bottom: 18px; flex-wrap: wrap; gap: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .historial-header h2 {
+      margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.028em;
+      color: var(--ink);
+    }
+    .btn-back {
+      background: transparent; border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 7px 12px; cursor: pointer; font-size: 12px; font-weight: 500;
+      color: var(--ink-subtle); font-family: inherit;
+      transition: background 140ms, color 140ms, border-color 140ms;
+    }
+    .btn-back:hover {
+      background: var(--overlay); color: var(--ink); border-color: var(--border-strong);
+    }
+    .filtros { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; }
+    .filtros label {
+      display: flex; flex-direction: column; gap: 5px;
+      font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-muted);
+    }
+    .filtros input {
+      padding: 7px 10px; background: var(--surface-muted);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--ink); font-family: var(--font-mono); font-size: 12px;
+      color-scheme: dark;
+    }
+    .filtros input:focus {
+      outline: none; border-color: var(--brand);
+      box-shadow: 0 0 0 1px var(--brand), 0 0 0 4px rgba(245, 180, 0, 0.16);
+    }
+    .loading, .error-msg, .empty {
+      text-align: center; padding: 44px; color: var(--ink-muted);
+      background: var(--surface); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg); font-size: 13px;
+    }
+    .empty { border-style: dashed; border-color: var(--border-strong); }
+    .error-msg { color: var(--danger-ink); background: var(--danger-soft); border-color: rgba(244,63,94,0.3); }
+    .total-text {
+      color: var(--ink-muted); font-family: var(--font-mono); font-size: 11px;
+      letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .tabla-historial {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+      background: var(--surface); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg); overflow: hidden;
+    }
+    .tabla-historial th, .tabla-historial td {
+      padding: 11px 14px; border-bottom: 1px solid var(--border-subtle); text-align: left;
+    }
+    .tabla-historial thead { background: var(--surface-muted); }
+    .tabla-historial th {
+      font-family: var(--font-mono); font-size: 10.5px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted);
+    }
+    .tabla-historial tbody td { color: var(--ink-subtle); }
+    .tabla-historial tbody tr:hover td { background: var(--overlay); }
+    .tabla-historial tbody tr:last-child td { border-bottom: 0; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px;
+      border-radius: var(--radius-xs); font-family: var(--font-mono);
+      font-size: 10.5px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; border: 1px solid;
+    }
+    .badge.completada {
+      background: var(--success-soft); color: var(--success-ink);
+      border-color: rgba(16, 185, 129, 0.32);
+    }
+    .paginacion {
+      display: flex; justify-content: center; align-items: center; gap: 14px;
+      margin-top: 22px; font-family: var(--font-mono); font-size: 12px;
+      color: var(--ink-muted); letter-spacing: 0.04em;
+    }
+    .paginacion button {
+      padding: 7px 14px; border: 1px solid var(--border); background: var(--surface);
+      border-radius: var(--radius-md); cursor: pointer;
+      color: var(--ink); font-family: inherit; font-size: 12px;
+      transition: background 140ms, border-color 140ms;
+    }
+    .paginacion button:hover:not(:disabled) {
+      background: var(--surface-raised); border-color: var(--border-strong);
+    }
     .paginacion button:disabled { opacity: 0.4; cursor: default; }
   `]
 })
