@@ -34,15 +34,26 @@ export class OutboxService {
       const items = await localDB.outbox.orderBy('created_at').toArray();
       for (const item of items) {
         try {
-          const resp = await fetch(item.url, {
-            method: item.method,
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Client-Id': item.client_id,
-              ...(item.headers || {}),
-            },
-            body: item.body ? JSON.stringify(item.body) : undefined,
-          });
+          // Timeout: un fetch colgado (red caida sin cerrar el socket) no debe
+          // bloquear el resto de la cola. Al expirar se aborta y cuenta como
+          // reintento (lo maneja el catch de abajo).
+          const ctrl = new AbortController();
+          const t = setTimeout(() => ctrl.abort(), 30000);
+          let resp: Response;
+          try {
+            resp = await fetch(item.url, {
+              method: item.method,
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Client-Id': item.client_id,
+                ...(item.headers || {}),
+              },
+              body: item.body ? JSON.stringify(item.body) : undefined,
+              signal: ctrl.signal,
+            });
+          } finally {
+            clearTimeout(t);
+          }
 
           if (resp.ok) {
             await localDB.outbox.delete(item.id!);
