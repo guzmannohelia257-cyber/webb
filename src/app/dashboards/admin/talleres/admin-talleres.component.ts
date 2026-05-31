@@ -74,7 +74,7 @@ export class AdminTalleresComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ── CARGA DE DATOS ────────────────────────────────────────────────────────
+  // Carga de datos
 
   cargarTalleres(): void {
     this.cargando = true;
@@ -101,7 +101,7 @@ export class AdminTalleresComponent implements OnInit, OnDestroy {
       });
   }
 
-  // ── FILTROS ───────────────────────────────────────────────────────────────
+  // Filtros
 
   aplicarFiltros(): void { this.cargarTalleres(); }
 
@@ -112,7 +112,7 @@ export class AdminTalleresComponent implements OnInit, OnDestroy {
     this.cargarTalleres();
   }
 
-  // ── FORMULARIO TALLER ─────────────────────────────────────────────────────
+  // Formulario de taller
 
   abrirFormulario(): void {
     this.mostrarFormulario = true;
@@ -179,7 +179,7 @@ export class AdminTalleresComponent implements OnInit, OnDestroy {
       });
   }
 
-  // ── FORMULARIO NUEVA CATEGORÍA ────────────────────────────────────────────
+  // Formulario de nueva categoría
 
   abrirFormCategoria(): void {
     this.mostrarFormCategoria = true;
@@ -218,7 +218,7 @@ export class AdminTalleresComponent implements OnInit, OnDestroy {
       });
   }
 
-  // ── ACCIONES SOBRE TALLERES ───────────────────────────────────────────────
+  // Acciones sobre talleres
 
   verificarTaller(taller: TallerAdmin): void {
     const accion = taller.verificado ? 'desverificar' : 'verificar';
@@ -243,7 +243,7 @@ export class AdminTalleresComponent implements OnInit, OnDestroy {
       });
   }
 
-  // ── MAPA ──────────────────────────────────────────────────────────────────
+  // Mapa
 
   actualizarMarcadorDesdeInputs(): void {
     const lat = Number(this.formTaller.get('latitud')?.value);

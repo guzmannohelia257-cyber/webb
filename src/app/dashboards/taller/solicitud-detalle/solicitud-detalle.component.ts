@@ -239,7 +239,7 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
       minZoom: 1
     }).addTo(this.map);
 
-    // ============ MARCADOR 1: CLIENTE (Ubicación del incidente) ============
+    // Marcador 1: cliente (ubicación del incidente)
     const iconCliente = L.icon({
       iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><path d="M12 0C7.03 0 3 4.03 3 9c0 5.25 9 15 9 15s9-9.75 9-15c0-4.97-4.03-9-9-9zm0 12c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>',
       iconSize: [32, 32],
@@ -261,7 +261,7 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
         </div>
       `);
 
-    // ============ MARCADOR 2: TÉCNICO (Ubicación actual, si está asignado) ============
+    // Marcador 2: técnico (ubicación actual, si está asignado)
     if (asig.id_usuario) {
       // TODO: Obtener ubicación del técnico del backend
       // Por ahora, intentamos obtener datos del técnico asignado

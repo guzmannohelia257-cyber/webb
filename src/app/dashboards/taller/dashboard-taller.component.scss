@@ -1,6 +1,4 @@
-// =================================================================
-// Dashboard Taller · 2-column layout (cream aesthetic)
-// =================================================================
+// Dashboard del taller · layout de dos columnas (estética crema)
 :host {
   display: block;
 }
@@ -12,9 +10,7 @@
   width: 100%;
 }
 
-// =================================================================
-// HERO STRIP · banda horizontal con welcome + toggle
-// =================================================================
+// Hero strip · banda horizontal con bienvenida y toggle
 .hero-strip {
   display: flex;
   align-items: flex-end;
@@ -125,9 +121,7 @@
   }
 }
 
-// =================================================================
-// 2-COLUMN BODY
-// =================================================================
+// Cuerpo de dos columnas
 .dashboard-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
@@ -161,9 +155,7 @@
   }
 }
 
-// =================================================================
-// SIDE BLOCK · contenedor para stats/actions/mini-nav
-// =================================================================
+// Side block · contenedor para estadísticas, acciones y mini-nav
 .side-block {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
@@ -186,7 +178,7 @@
   }
 }
 
-// ── Stats list (vertical) ─────────────────────────────────────────
+// Lista de estadísticas (vertical)
 .stats-list {
   display: flex;
   flex-direction: column;
@@ -233,7 +225,7 @@
   }
 }
 
-// ── Quick actions vertical list ──────────────────────────────────
+// Lista vertical de acciones rápidas
 .quick-list {
   display: flex;
   flex-direction: column;
@@ -297,7 +289,7 @@
   }
 }
 
-// ── Mini-nav (config toggles) ────────────────────────────────────
+// Mini-nav (toggles de configuración)
 .mini-nav {
   display: flex;
   flex-direction: column;
@@ -345,9 +337,7 @@
   }
 }
 
-// =================================================================
-// SOLICITUDES PENDIENTES · main col
-// =================================================================
+// Solicitudes pendientes · columna principal
 .solicitudes-pendientes-section {
   .section-header {
     display: flex;
@@ -479,7 +469,7 @@
   }
 }
 
-// Status / priority badges
+// Badges de estado y prioridad
 .badge-estado,
 .badge-prioridad {
   display: inline-flex;
@@ -531,9 +521,7 @@
   border-color: rgba(122, 146, 119, 0.28);
 }
 
-// =================================================================
-// EARNINGS RIBBON · horizontal compacto (reemplaza la card dusk)
-// =================================================================
+// Earnings ribbon · versión horizontal compacta (reemplaza la card dusk)
 .earnings-ribbon {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
@@ -543,7 +531,7 @@
   position: relative;
   overflow: hidden;
 
-  // Soft peach wash a la derecha
+  // Degradado suave hacia la derecha
   &::before {
     content: '';
     position: absolute;
@@ -624,9 +612,7 @@
   }
 }
 
-// =================================================================
-// TALLER INFO · sigue en main col cuando se abre
-// =================================================================
+// Información del taller · permanece en la columna principal al abrirse
 .taller-info,
 .taller-card {
   background: var(--surface-raised);
@@ -679,12 +665,10 @@
   }
 }
 
-// =================================================================
-// TECNICOS · table list
-// =================================================================
+// Técnicos · lista en formato tabla
 .tecnicos-section,
 .servicios-section {
-  // no extra
+  // Sin estilos adicionales
 }
 
 .tecnicos-card,
@@ -827,7 +811,7 @@
   }
 }
 
-// ── Servicios chips ───────────────────────────────────────────────
+// Chips de servicios
 .categorias-grid {
   display: flex;
   flex-wrap: wrap;
@@ -891,9 +875,7 @@
   color: var(--warning-ink);
 }
 
-// =================================================================
-// LIVE solicitud card (Emergencias en vivo · cards)
-// =================================================================
+// Card de solicitud en vivo (emergencias en vivo)
 .solicitud-card.card-live {
   cursor: default;
   border-color: rgba(184, 92, 104, 0.32);
@@ -1021,9 +1003,7 @@
   }
 }
 
-// =================================================================
-// RESPONSIVE
-// =================================================================
+// Responsive
 @media (max-width: 768px) {
   .hero-strip {
     flex-direction: column;

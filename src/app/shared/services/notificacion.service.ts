@@ -22,7 +22,7 @@ export class NotificacionService {
 
   constructor(private http: HttpService) {}
 
-  // ── REST API ────────────────────────────────────────────────────────────────
+  // REST API
 
   getMisNotificaciones(soloNoLeidas = false): Observable<Notificacion[]> {
     return this.http.get<Notificacion[]>(
@@ -43,7 +43,7 @@ export class NotificacionService {
     });
   }
 
-  // ── Firebase FCM ────────────────────────────────────────────────────────────
+  // Firebase FCM
 
   async initFirebase(): Promise<void> {
     if (this._firebaseInitialized) return;

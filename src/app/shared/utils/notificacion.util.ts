@@ -17,7 +17,7 @@ export function notificacion(
 
   const mensajeCompleto = `${prefijos[tipo]} ${mensaje}`;
 
-  // Mostrar en consola también para debugging
+  // Se registra también en consola para facilitar la depuración
   console.log(`[${tipo.toUpperCase()}] ${mensaje}`);
 
   // En producción, aquí se integraría con un sistema de notificaciones visual

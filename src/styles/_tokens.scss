@@ -1,12 +1,10 @@
-// =================================================================
-// Design tokens — Flujo Emergencia · SOFT CREAM AESTHETIC
-// =================================================================
-// Paleta calida tipo papel/notion/things 3. Crema como fondo,
+// Design tokens — Flujo Emergencia · estética soft cream
+// Paleta cálida tipo papel/Notion/Things 3. Crema como fondo,
 // terracota mate como acento de marca (no rojo agresivo,
-// "warm emergency"), sombras suaves y tipografia airosa.
+// "warm emergency"), sombras suaves y tipografía airosa.
 
 :root {
-  // ── Brand · terracota mate ──────────────────────────────────────
+  // Brand · terracota mate
   --brand: #c26849;
   --brand-bright: #d6815e;
   --brand-dark: #984b30;
@@ -16,15 +14,15 @@
   --brand-ink: #6d3621;
   --brand-glow: 0 6px 18px -6px rgba(194, 104, 73, 0.32);
 
-  // ── Ink (text) ──────────────────────────────────────────────────
-  // Nunca puro negro: marron-grafito calido.
+  // Ink (texto)
+  // Nunca negro puro: marrón-grafito cálido.
   --ink: #2d2a24;
   --ink-subtle: #5a5246;
   --ink-muted: #8a7e6d;
   --ink-faint: #beb3a0;
   --ink-inverse: #ffffff;
 
-  // ── Surfaces ────────────────────────────────────────────────────
+  // Surfaces
   --canvas: #ebe3d0;
   --background: #f2ecdc;
   --surface: #fbf6e9;
@@ -34,7 +32,7 @@
   --overlay: #ece3cc;
   --tint: rgba(45, 42, 36, 0.025);
 
-  // ── Borders ─────────────────────────────────────────────────────
+  // Borders
   --border: #e0d6bf;
   --border-subtle: #ebe2cb;
   --border-strong: #c8bb9d;
@@ -42,9 +40,9 @@
   --hairline: rgba(45, 42, 36, 0.08);
   --hairline-strong: rgba(45, 42, 36, 0.14);
 
-  // ── Accents · paleta pastel ────────────────────────────────────
-  // Todos mate, ninguno saturado: el aesthetic depende de la
-  // restriccion cromatica.
+  // Accents · paleta pastel
+  // Todos mate, ninguno saturado: la estética depende de la
+  // restricción cromática.
   --sage: #7a9277;
   --sage-soft: #e2ebde;
   --sage-ink: #3e5a3d;
@@ -65,7 +63,7 @@
   --lilac-soft: #e8e2ef;
   --lilac-ink: #4e3f63;
 
-  // Legacy aliases (componentes referencian estos nombres)
+  // Alias heredados (algunos componentes referencian estos nombres)
   --amber: var(--gold);
   --amber-soft: var(--gold-soft);
   --amber-ink: var(--gold-ink);
@@ -88,7 +86,7 @@
   --violet-soft: var(--lilac-soft);
   --violet-ink: var(--lilac-ink);
 
-  // ── Semantic ───────────────────────────────────────────────────
+  // Semantic
   --danger: var(--rose);
   --danger-soft: var(--rose-soft);
   --danger-ink: var(--rose-ink);
@@ -99,7 +97,7 @@
   --warning-soft: var(--gold-soft);
   --warning-ink: var(--gold-ink);
 
-  // ── Gradients ──────────────────────────────────────────────────
+  // Gradients
   --grad-brand: linear-gradient(135deg, #c26849 0%, #984b30 100%);
   --grad-brand-deep: linear-gradient(
     135deg,
@@ -115,7 +113,7 @@
     transparent 70%
   );
 
-  // ── Spacing (4pt grid) ──────────────────────────────────────────
+  // Spacing (grid de 4pt)
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -127,7 +125,7 @@
   --space-9: 56px;
   --space-10: 72px;
 
-  // ── Radii · mas redondeados (aesthetic feel) ───────────────────
+  // Radii · más redondeados (para el estilo aesthetic)
   --radius-xs: 6px;
   --radius-sm: 10px;
   --radius-md: 14px;
@@ -135,7 +133,7 @@
   --radius-xl: 28px;
   --radius-pill: 999px;
 
-  // ── Shadows · soft & warm ──────────────────────────────────────
+  // Shadows · suaves y cálidas
   --shadow-xs: 0 1px 2px rgba(45, 42, 36, 0.04);
   --shadow-sm: 0 1px 3px rgba(45, 42, 36, 0.05),
     0 1px 1px rgba(45, 42, 36, 0.03);
@@ -148,13 +146,13 @@
   --shadow-brand: 0 16px 32px -10px rgba(194, 104, 73, 0.32);
   --shadow-brand-sm: 0 4px 12px -2px rgba(194, 104, 73, 0.22);
 
-  // ── Rings (focus) ─────────────────────────────────────────────
+  // Rings (focus)
   --ring-brand: 0 0 0 4px rgba(194, 104, 73, 0.16);
   --ring-focus: 0 0 0 4px rgba(194, 104, 73, 0.14);
   --ring-danger: 0 0 0 4px rgba(184, 92, 104, 0.16);
 
-  // ── Typography ────────────────────────────────────────────────
-  // Inter para body. Fraunces (serif) opcional para display headings.
+  // Typography
+  // Inter para el cuerpo. Fraunces (serif) opcional para títulos display.
   --font-sans: 'Inter', 'Söhne', 'Segoe UI', -apple-system, BlinkMacSystemFont,
     Roboto, Helvetica, Arial, sans-serif;
   --font-display: 'Fraunces', 'Source Serif Pro', 'Times New Roman',
@@ -162,7 +160,7 @@
   --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace,
     SFMono-Regular, Menlo, monospace;
 
-  // ── Motion ────────────────────────────────────────────────────
+  // Motion
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
@@ -170,7 +168,7 @@
   --duration: 220ms;
   --duration-slow: 420ms;
 
-  // ── Layout ────────────────────────────────────────────────────
+  // Layout
   --container-max: 1280px;
   --container-narrow: 980px;
   --header-h: 64px;

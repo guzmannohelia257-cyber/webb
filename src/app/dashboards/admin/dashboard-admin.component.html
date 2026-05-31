@@ -10,7 +10,7 @@
   </header>
 
   <main class="dashboard-main">
-    <!-- VISTA INICIAL -->
+    <!-- Vista inicial -->
     @if (vistaActual === 'inicio') {
       <section class="welcome-section">
         <h2>Bienvenido/a, {{ currentUser?.nombre }}!</h2>
@@ -51,7 +51,7 @@
       </section>
     }
 
-    <!-- VISTA TALLERES -->
+    <!-- Vista talleres -->
     @if (vistaActual === 'talleres') {
       <nav class="nav-volver">
         <button (click)="irAInicio()" class="btn-volver">
@@ -61,7 +61,7 @@
       <app-admin-talleres></app-admin-talleres>
     }
 
-    <!-- VISTA GANANCIAS -->
+    <!-- Vista ganancias -->
     @if (vistaActual === 'ganancias') {
       <nav class="nav-volver">
         <button (click)="irAInicio()" class="btn-volver">
@@ -71,7 +71,7 @@
       <app-admin-ganancias></app-admin-ganancias>
     }
 
-    <!-- VISTA SERVICIOS -->
+    <!-- Vista servicios -->
     @if (vistaActual === 'servicios') {
       <nav class="nav-volver">
         <button (click)="irAInicio()" class="btn-volver">

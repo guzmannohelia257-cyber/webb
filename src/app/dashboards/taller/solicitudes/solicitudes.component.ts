@@ -119,7 +119,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
 
   /**
    * Con el nuevo flujo, cuando el cliente confirma este taller ya existe
-   * una asignación en pendiente. Buscamos esa asignacion y redirigimos al
+   * una asignación en pendiente. Buscamos esa asignación y redirigimos al
    * detalle (donde se asigna técnico, se acepta formalmente, etc.).
    */
   aceptarIncidente(e: IncidenteLive): void {

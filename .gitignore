@@ -43,3 +43,27 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# ---------------------------------------------------------------------------
+# Credenciales de servicios externos
+# Claves de Firebase, Google y similares. Nunca deben versionarse.
+# ---------------------------------------------------------------------------
+google-services*.json
+firebase-credentials.json
+serviceAccountKey*.json
+*.pem
+*.key
+
+# ---------------------------------------------------------------------------
+# Logs
+# ---------------------------------------------------------------------------
+*.log
+
+# ---------------------------------------------------------------------------
+# Documentacion interna
+# El codigo es la fuente de verdad: no se versiona documentacion en Markdown
+# ni las carpetas de guias.
+# ---------------------------------------------------------------------------
+*.md
+/guias/
+/G2WEB/

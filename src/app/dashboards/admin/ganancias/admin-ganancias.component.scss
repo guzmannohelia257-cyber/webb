@@ -98,7 +98,7 @@
     }
   }
 
-  // STATS
+  // Tarjetas de resumen
   .stats-resumen {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -142,7 +142,7 @@
     }
   }
 
-  // TABLA
+  // Tabla de ganancias
   .tabla-responsiva {
     overflow-x: auto;
     background: var(--surface);

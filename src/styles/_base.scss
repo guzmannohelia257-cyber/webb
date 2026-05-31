@@ -1,6 +1,4 @@
-// =================================================================
-// Base · Soft Cream Aesthetic
-// =================================================================
+// Base · estética soft cream
 
 *,
 *::before,
@@ -54,7 +52,7 @@ body::before {
     );
 }
 
-// ── Headings · display serif para grandes ──────────────────────────
+// Encabezados · serif de display para los tamaños grandes
 h1,
 h2,
 h3,
@@ -166,7 +164,7 @@ kbd {
   font-size: 0.92em;
 }
 
-// ── Utilities ──────────────────────────────────────────────────────
+// Utilidades
 .text-muted {
   color: var(--ink-muted);
 }

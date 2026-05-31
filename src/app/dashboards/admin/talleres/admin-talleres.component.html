@@ -6,7 +6,7 @@
     </button>
   </header>
 
-  <!-- FORMULARIO MODAL -->
+  <!-- Formulario modal -->
   @if (mostrarFormulario) {
     <div class="formulario-overlay" (click)="cerrarFormulario()">
       <div class="formulario-contenedor" (click)="$event.stopPropagation()">
@@ -97,7 +97,7 @@
             </div>
           </div>
 
-          <!-- CATEGORÍAS -->
+          <!-- Categorías -->
           <div class="form-group">
             <div class="categorias-header">
               <label>Servicios que atiende</label>
@@ -131,7 +131,7 @@
             }
           </div>
 
-          <!-- FORMULARIO NUEVA CATEGORÍA (inline) -->
+          <!-- Formulario de nueva categoría (inline) -->
           @if (mostrarFormCategoria) {
             <div class="nueva-categoria-form" [formGroup]="formCategoria">
               <h4>Nuevo servicio</h4>
@@ -184,7 +184,7 @@
     </div>
   }
 
-  <!-- FILTROS -->
+  <!-- Filtros -->
   <section class="filtros-section">
     <div class="filtro-grupo">
       <label>Estado:</label>
@@ -221,7 +221,7 @@
     </div>
   </section>
 
-  <!-- TABLA -->
+  <!-- Tabla -->
   @if (cargando) {
     <div class="loading">Cargando talleres...</div>
   } @else if (talleres.length === 0) {

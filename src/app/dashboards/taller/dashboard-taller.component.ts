@@ -513,7 +513,7 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * NUEVO — B.3: Toggle disponibilidad del taller
+   * B.3: Alterna la disponibilidad del taller.
    */
   toggleDisponibilidad(): void {
     console.log('[DashboardTaller] toggleDisponibilidad →', { disponible: !this.disponible });
@@ -543,7 +543,7 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ── GESTIÓN DE SERVICIOS ─────────────────────────────────────────────────
+  // Gestión de servicios
 
   cargarCategorias(): void {
     this.tallerService.obtenerCategorias()

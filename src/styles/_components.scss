@@ -1,10 +1,6 @@
-// =================================================================
 // Components · Soft Cream Aesthetic
-// =================================================================
 
-// =================================================================
 // Buttons
-// =================================================================
 .btn {
   appearance: none;
   position: relative;
@@ -132,9 +128,7 @@
   width: 100%;
 }
 
-// =================================================================
-// Forms · soft rounded
-// =================================================================
+// Formularios · esquinas suaves
 .form-group {
   margin-bottom: 18px;
 
@@ -202,7 +196,7 @@ select.form-control {
   padding-right: 38px;
 }
 
-// ── Autofill override (Chrome / Edge / Safari) ─────────────────────
+// Anulación del autocompletado (Chrome / Edge / Safari).
 // Sin esto, el navegador pinta los inputs autocompletados con su
 // fondo azul-lavanda por defecto y rompe la paleta cream.
 input:-webkit-autofill,
@@ -244,9 +238,7 @@ textarea.form-control {
   margin-top: 7px;
 }
 
-// =================================================================
-// Alerts · soft & cozy
-// =================================================================
+// Alertas · suaves y acogedoras
 .alert {
   display: flex;
   align-items: flex-start;
@@ -301,9 +293,7 @@ textarea.form-control {
   }
 }
 
-// =================================================================
-// Cards & surfaces
-// =================================================================
+// Tarjetas y superficies
 .card {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
@@ -335,9 +325,7 @@ textarea.form-control {
   margin-bottom: 16px;
 }
 
-// =================================================================
-// Badges
-// =================================================================
+// Insignias
 .badge {
   display: inline-flex;
   align-items: center;
@@ -389,9 +377,7 @@ textarea.form-control {
   }
 }
 
-// =================================================================
 // Spinner
-// =================================================================
 .spinner {
   display: inline-block;
   width: 14px;
@@ -408,9 +394,7 @@ textarea.form-control {
   to { transform: rotate(360deg); }
 }
 
-// =================================================================
-// Empty states
-// =================================================================
+// Estados vacíos
 .empty-state,
 .empty-state-card {
   background: var(--surface);
@@ -422,9 +406,7 @@ textarea.form-control {
   font-size: 13.5px;
 }
 
-// =================================================================
-// Loading
-// =================================================================
+// Carga
 .loading {
   color: var(--ink-muted);
   font-size: 13.5px;
@@ -432,9 +414,7 @@ textarea.form-control {
   text-align: center;
 }
 
-// =================================================================
-// Modals
-// =================================================================
+// Modales
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -526,9 +506,7 @@ textarea.form-control {
   }
 }
 
-// =================================================================
-// Dashboard scaffolding
-// =================================================================
+// Estructura del dashboard
 .dashboard-container {
   display: flex;
   flex-direction: column;
@@ -624,9 +602,7 @@ textarea.form-control {
   padding: 40px 28px 80px;
 }
 
-// =================================================================
-// Welcome / hero section · editorial calm
-// =================================================================
+// Sección de bienvenida / hero · estilo editorial sobrio
 .welcome-section {
   margin-bottom: 36px;
   display: flex;
@@ -654,9 +630,7 @@ textarea.form-control {
   }
 }
 
-// =================================================================
-// Stats grid · soft cards (no panel-de-instrumentos)
-// =================================================================
+// Cuadrícula de estadísticas · tarjetas suaves (sin panel de instrumentos)
 .stats-section {
   margin-bottom: 44px;
 
@@ -723,9 +697,7 @@ textarea.form-control {
   }
 }
 
-// =================================================================
-// Quick actions
-// =================================================================
+// Acciones rápidas
 .quick-actions {
   h3 {
     font-family: var(--font-sans);
@@ -816,9 +788,7 @@ textarea.form-control {
   }
 }
 
-// =================================================================
-// Nav volver
-// =================================================================
+// Navegación de retorno
 .nav-volver {
   margin-bottom: 22px;
 

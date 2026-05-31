@@ -27,7 +27,7 @@ export class HttpService {
       'Content-Type': 'application/json'
     });
 
-    // Solo agregar Authorization si el token existe (Bug 1 fix)
+    // Solo se agrega la cabecera Authorization cuando existe un token
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }

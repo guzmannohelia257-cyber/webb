@@ -1,6 +1,4 @@
-// =================================================================
 // Login · Soft Cream Aesthetic
-// =================================================================
 
 :host {
   display: block;
@@ -17,7 +15,7 @@
   padding: 0;
 }
 
-// ── Background orbs (decorative) ───────────────────────────────────
+// Orbes de fondo (decorativos)
 .page-orbs {
   position: absolute;
   inset: 0;
@@ -49,7 +47,7 @@
   }
 }
 
-// ── Wordmark (esquina superior izquierda — no panel completo) ─────
+// Wordmark (esquina superior izquierda, sin panel completo)
 .page-wordmark {
   position: relative;
   z-index: 2;
@@ -86,7 +84,7 @@
   }
 }
 
-// ── Paper card central ────────────────────────────────────────────
+// Tarjeta central (paper)
 .login-paper {
   position: relative;
   z-index: 2;
@@ -112,7 +110,7 @@
   }
 }
 
-// ── Head con serif italic accent ──────────────────────────────────
+// Encabezado con acento en serif itálica
 .paper-head {
   margin-bottom: 28px;
   display: flex;
@@ -152,7 +150,7 @@
   line-height: 1.6;
 }
 
-// ── Form ──────────────────────────────────────────────────────────
+// Formulario
 .paper-form {
   display: flex;
   flex-direction: column;
@@ -210,7 +208,7 @@
   }
 }
 
-// ── CTA principal ─────────────────────────────────────────────────
+// CTA principal
 .paper-cta {
   width: 100%;
   display: inline-flex;
@@ -260,7 +258,7 @@
   }
 }
 
-// ── Divider "o continúa como" ─────────────────────────────────────
+// Separador "o continúa como"
 .paper-divider {
   display: flex;
   align-items: center;
@@ -285,7 +283,7 @@
   }
 }
 
-// ── Role pills (dos lado a lado) ──────────────────────────────────
+// Pills de rol (dos lado a lado)
 .paper-roles {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -367,7 +365,7 @@
   }
 }
 
-// ── Foot ──────────────────────────────────────────────────────────
+// Pie de página
 .page-foot {
   position: relative;
   z-index: 2;
@@ -386,7 +384,7 @@
   }
 }
 
-// ── Responsive ────────────────────────────────────────────────────
+// Responsive
 @media (max-width: 640px) {
   .page-wordmark {
     padding: 22px 24px;

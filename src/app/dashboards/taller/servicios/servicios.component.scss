@@ -92,7 +92,7 @@
   }
 }
 
-// ── Tarifa km ─────────────────────────────────────────────────
+// Tarifa por km
 .tarifa-km-card {
   background: var(--surface);
   border: 1px solid var(--border-subtle);
@@ -154,7 +154,7 @@
   }
 }
 
-// ── Tabla de servicios ───────────────────────────────────────
+// Tabla de servicios
 .tabla-card {
   background: var(--surface);
   border: 1px solid var(--border-subtle);
@@ -203,7 +203,7 @@
     }
   }
 
-  // Nombres de categoria
+  // Nombres de categoría
   strong,
   b {
     color: var(--ink);
@@ -211,7 +211,7 @@
     letter-spacing: -0.005em;
   }
 
-  // Checkbox column
+  // Columna de selección (checkbox)
   input[type='checkbox'] {
     width: 16px;
     height: 16px;

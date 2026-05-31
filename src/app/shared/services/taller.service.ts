@@ -135,7 +135,7 @@ export class TallerService {
   }
 
   /**
-   * NUEVO — B.3: Toggle disponibilidad del taller
+   * B.3: alterna la disponibilidad del taller
    */
   toggleDisponibilidad(disponible: boolean): Observable<Taller> {
     console.log('[TallerService] toggleDisponibilidad →', { disponible });
@@ -167,7 +167,7 @@ export class TallerService {
   }
 
   /**
-   * NUEVO — A.3: Obtiene evaluaciones/reseñas del taller
+   * A.3: obtiene las evaluaciones y reseñas del taller
    */
   obtenerEvaluaciones(): Observable<EvaluacionResponse[]> {
     console.log('[TallerService] obtenerEvaluaciones →');

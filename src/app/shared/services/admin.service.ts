@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpService } from './http.service';
 
-// ── Interfaces que coinciden con los schemas del backend ────────────────────
+// Interfaces que coinciden con los schemas del backend
 
 export interface TallerAdmin {
   id_taller: number;
@@ -96,7 +96,7 @@ export class AdminService {
 
   constructor(private httpService: HttpService) {}
 
-  // ── TALLERES ────────────────────────────────────────────────────────────────
+  // Talleres
 
   obtenerTalleres(filtros?: {
     activo?: boolean;
@@ -128,7 +128,7 @@ export class AdminService {
     return this.httpService.delete<{ mensaje: string }>(`${this.base}/talleres/${id}`);
   }
 
-  // ── CATEGORÍAS ─────────────────────────────────────────────────────────────
+  // Categorías
 
   obtenerCategorias(): Observable<CategoriaAdmin[]> {
     return this.httpService.get<CategoriaAdmin[]>(`${this.base}/categorias`);
@@ -138,7 +138,7 @@ export class AdminService {
     return this.httpService.post<CategoriaAdmin>(`${this.base}/categorias`, datos);
   }
 
-  // ── GANANCIAS ───────────────────────────────────────────────────────────────
+  // Ganancias
 
   /** Ganancias de la plataforma agrupadas por mes. */
   obtenerGananciasMensual(anio?: number): Observable<GananciaMensualRow[]> {
