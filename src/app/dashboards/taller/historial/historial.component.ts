@@ -51,6 +51,7 @@ import { finalize } from 'rxjs/operators';
               <th>Categoría</th>
               <th>Técnico</th>
               <th>Estado</th>
+              <th>Pago</th>
             </tr>
           </thead>
           <tbody>
@@ -63,6 +64,11 @@ import { finalize } from 'rxjs/operators';
               <td>{{ a.id_usuario ?? '—' }}</td>
               <td>
                 <span class="badge completada">{{ a.estado.nombre }}</span>
+              </td>
+              <td>
+                <span class="badge" [class.pagado]="a.pagado" [class.no-pagado]="!a.pagado">
+                  {{ a.pagado ? 'Pagado' : 'No pagado' }}
+                </span>
               </td>
             </tr>
           </tbody>
@@ -152,6 +158,14 @@ import { finalize } from 'rxjs/operators';
     .badge.completada {
       background: var(--success-soft); color: var(--success-ink);
       border-color: rgba(16, 185, 129, 0.32);
+    }
+    .badge.pagado {
+      background: var(--success-soft); color: var(--success-ink);
+      border-color: rgba(16, 185, 129, 0.32);
+    }
+    .badge.no-pagado {
+      background: var(--warning-soft); color: var(--warning-ink);
+      border-color: rgba(245, 180, 0, 0.34);
     }
     .paginacion {
       display: flex; justify-content: center; align-items: center; gap: 14px;

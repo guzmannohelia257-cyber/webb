@@ -244,6 +244,13 @@
     &.prioridad-baja  { background: var(--success-soft); color: var(--success-ink); border-color: rgba(16, 185, 129, 0.3); }
   }
 
+  // Estado de pago del cliente (solo en solicitudes completadas).
+  &.badge-pago {
+    &::before { display: none; }
+    &.pagado    { background: var(--success-soft); color: var(--success-ink); border-color: rgba(16, 185, 129, 0.3); }
+    &.no-pagado { background: var(--warning-soft); color: var(--warning-ink); border-color: rgba(245, 180, 0, 0.34); }
+  }
+
   &.badge-live-card {
     background: var(--danger-soft);
     color: var(--danger-ink);

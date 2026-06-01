@@ -101,6 +101,12 @@
                   {{ s.incidente.prioridad.nivel }}
                 </span>
               }
+              <!-- Estado de pago: solo visible en solicitudes completadas. -->
+              @if (s.estado.nombre === 'completada') {
+                <span class="badge badge-pago" [class.pagado]="s.pagado" [class.no-pagado]="!s.pagado">
+                  {{ s.pagado ? '💵 Pagado' : '⏳ No pagado' }}
+                </span>
+              }
             </div>
 
             <h3 class="card-title">

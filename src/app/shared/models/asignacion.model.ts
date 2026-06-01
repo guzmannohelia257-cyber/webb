@@ -56,6 +56,8 @@ export interface AsignacionTaller {
   nota_taller: string | null;
   created_at: string;
   updated_at: string;
+  // Indica si el cliente ya pagó el servicio (solo relevante en estado 'completada').
+  pagado?: boolean;
   estado: EstadoAsignacion;
   incidente: IncidenteAsignacion;
 }
