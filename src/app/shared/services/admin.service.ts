@@ -92,6 +92,7 @@ interface GananciaPorTallerResponse {
 export interface ConfiguracionGlobal {
   sla_penalizacion_pct: number;
   sla_tolerancia_min: number;
+  comision_plataforma_pct: number;
 }
 
 // KPIs (backend: kpi_schema)

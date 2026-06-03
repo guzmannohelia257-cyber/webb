@@ -59,6 +59,12 @@ export interface TecnicoUpdate {
   activo?: boolean;
 }
 
+export interface TarifasInfo {
+  comision_plataforma_pct: number;
+  sla_penalizacion_pct: number;
+  sla_tolerancia_min: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -71,6 +77,11 @@ export class TallerService {
    */
   obtenerMiTaller(): Observable<Taller> {
     return this.http.get<Taller>('/talleres/mi-taller');
+  }
+
+  /** Tarifas/penalizaciones vigentes (comision, descuento por retardo, tolerancia). */
+  obtenerTarifas(): Observable<TarifasInfo> {
+    return this.http.get<TarifasInfo>('/talleres/mi-taller/tarifas');
   }
 
   /**

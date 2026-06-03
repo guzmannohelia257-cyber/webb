@@ -324,6 +324,30 @@
     <!-- Columna lateral (fija) -->
     <aside class="dashboard-side-col">
 
+      <!-- Tarifas vigentes (configuradas por el admin de la plataforma) -->
+      @if (tarifas) {
+        <div class="side-block stats-list">
+          <div class="side-block__head">
+            <span class="side-block__eyebrow">Tarifas</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-row__icon">🏦</span>
+            <span class="stat-row__label">Comisión de la plataforma</span>
+            <span class="stat-row__value">{{ tarifas.comision_plataforma_pct }}%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-row__icon">⏱️</span>
+            <span class="stat-row__label">Descuento por retardo</span>
+            <span class="stat-row__value">{{ tarifas.sla_penalizacion_pct }}%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-row__icon">🕒</span>
+            <span class="stat-row__label">Tolerancia de retardo</span>
+            <span class="stat-row__value">{{ tarifas.sla_tolerancia_min }} min</span>
+          </div>
+        </div>
+      }
+
       <!-- Lista de estadísticas (compacta, sin rejilla de cuatro) -->
       <div class="side-block stats-list">
         <div class="side-block__head">

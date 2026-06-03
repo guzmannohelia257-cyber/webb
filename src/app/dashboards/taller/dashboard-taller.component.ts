@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, TallerAuth } from '../../shared/services/auth.service';
-import { TallerService, Taller, Tecnico, TecnicoCreate, TecnicoUpdate, CategoriaDisponible, ServicioTaller } from '../../shared/services/taller.service';
+import { TallerService, Taller, Tecnico, TecnicoCreate, TecnicoUpdate, CategoriaDisponible, ServicioTaller, TarifasInfo } from '../../shared/services/taller.service';
 import { AsignacionesService } from '../../shared/services/asignaciones.service';
 import { AsignacionTaller } from '../../shared/models/asignacion.model';
 import { EvaluacionResponse } from '../../shared/models/evaluacion.model';
@@ -73,6 +73,7 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
   gananciasMes = 0;
   ticketPromedioMes = 0;
   totalServiciosMes = 0;
+  tarifas: TarifasInfo | null = null;
 
 
   quickActions = [
@@ -117,7 +118,17 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
     this.cargarDatosTaller();
     this.cargarResumenDashboard();
     this.cargarCategorias();
+    this.cargarTarifas();
     this._wsSub = this.rt.events$.subscribe(evt => this.handleWsEvent(evt));
+  }
+
+  private cargarTarifas(): void {
+    this.tallerService.obtenerTarifas()
+      .pipe(catchError(() => of(null)))
+      .subscribe(t => {
+        this.tarifas = t;
+        this.cdr.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {
