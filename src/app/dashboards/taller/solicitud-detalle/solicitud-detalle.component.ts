@@ -34,6 +34,9 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
   cotizacion = signal<CotizacionEstimada | null>(null);
 
   map: L.Map | null = null;
+  private tecnicoMarker: L.Marker | null = null;
+  private rutaLayer: L.Polyline | null = null;
+  private pollId: ReturnType<typeof setInterval> | null = null;
 
   formAceptar: FormGroup;
   formRechazar: FormGroup;
@@ -69,10 +72,7 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnDestroy(): void {
-    if (this.map) {
-      this.map.off();
-      this.map.remove();
-    }
+    this.destruirMapa();
   }
 
   cargarAsignacion(id: number): void {
@@ -242,13 +242,19 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   toggleMapa(): void {
-    this.mostrarMapa.set(!this.mostrarMapa());
-    if (this.mostrarMapa() && !this.map) {
-      // Cargar técnicos si aún no están cargados (para mostrar ubicación del técnico asignado)
-      if (this.tecnicos().length === 0) {
-        this.cargarTecnicos();
+    const mostrar = !this.mostrarMapa();
+    this.mostrarMapa.set(mostrar);
+    if (mostrar) {
+      // Asegurar la lista completa de técnicos para ubicar al asignado en el mapa.
+      if (this.todosTecnicos().length === 0 && this.asignacion()?.id_usuario) {
+        this.tallerService.obtenerTecnicos().subscribe({
+          next: (t) => this.todosTecnicos.set(t ?? []),
+          error: () => {},
+        });
       }
       setTimeout(() => this.inicializarMapa(), 100);
+    } else {
+      this.destruirMapa();
     }
   }
 
@@ -294,51 +300,109 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
         </div>
       `);
 
-    // Marcador 2: técnico (ubicación actual, si está asignado)
-    if (asig.id_usuario) {
-      // TODO: Obtener ubicación del técnico del backend
-      // Por ahora, intentamos obtener datos del técnico asignado
-      const tecnicoAsignado = this.tecnicos().find(t => t.id_usuario === asig.id_usuario);
-      
-      if (tecnicoAsignado && tecnicoAsignado.latitud != null && tecnicoAsignado.longitud != null) {
-        const tecnicoLat = tecnicoAsignado.latitud;
-        const tecnicoLng = tecnicoAsignado.longitud;
-
-        const iconTecnico = L.icon({
-          iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="orange"><path d="M12 0C7.03 0 3 4.03 3 9c0 5.25 9 15 9 15s9-9.75 9-15c0-4.97-4.03-9-9-9zm0 12c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>',
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-          popupAnchor: [0, -32]
-        });
-
-        L.marker([tecnicoLat, tecnicoLng], {
-          icon: iconTecnico,
-          title: `Técnico: ${tecnicoAsignado.nombre}`
-        })
-          .addTo(this.map)
-          .bindPopup(`
-            <div class="map-popup">
-              <strong style="color: orange;">🔧 TÉCNICO</strong><br/>
-              <strong>${tecnicoAsignado.nombre}</strong><br/>
-              ${tecnicoLat.toFixed(4)}, ${tecnicoLng.toFixed(4)}<br/>
-              <small>Ubicación actual</small>
-            </div>
-          `);
-
-        // Ajustar zoom para que se vean ambos marcadores
-        const group = new L.FeatureGroup([
-          L.marker([clienteLat, clienteLng]),
-          L.marker([tecnicoLat, tecnicoLng])
-        ]);
-        this.map.fitBounds(group.getBounds().pad(0.1), { padding: [50, 50] });
-      } else {
-        // Solo mapa del cliente si el técnico no tiene ubicación
-        console.log('[SolicitudDetalle] Técnico asignado sin ubicación disponible');
-      }
+    // Marcador del técnico asignado + ruta OSRM (con refresco en vivo si va en camino).
+    this.pintarTecnicoYRuta();
+    if (asig.estado.nombre === 'en_camino') {
+      this.iniciarPollingTecnico();
     }
 
-    // Invalidar el tamaño del mapa (necesario después de mostrar)
     this.map.invalidateSize();
+  }
+
+  private iconoTecnico(): L.Icon {
+    return L.icon({
+      iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="orange"><path d="M12 0C7.03 0 3 4.03 3 9c0 5.25 9 15 9 15s9-9.75 9-15c0-4.97-4.03-9-9-9zm0 12c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32],
+    });
+  }
+
+  // Coloca/actualiza el marcador del técnico asignado y (re)dibuja la ruta OSRM.
+  private pintarTecnicoYRuta(): void {
+    const asig = this.asignacion();
+    if (!asig || !this.map || !asig.id_usuario) return;
+    const tec = this.todosTecnicos().find(t => t.id_usuario === asig.id_usuario);
+    if (!tec || tec.latitud == null || tec.longitud == null) return;
+
+    const tecLat = tec.latitud;
+    const tecLng = tec.longitud;
+
+    if (this.tecnicoMarker) {
+      this.tecnicoMarker.setLatLng([tecLat, tecLng]);
+    } else {
+      this.tecnicoMarker = L.marker([tecLat, tecLng], {
+        icon: this.iconoTecnico(),
+        title: `Técnico: ${tec.nombre}`,
+      })
+        .addTo(this.map)
+        .bindPopup(`<div class="map-popup"><strong style="color: orange;">🔧 TÉCNICO</strong><br/><strong>${tec.nombre}</strong><br/><small>Ubicación actual</small></div>`);
+    }
+
+    this.dibujarRutaOSRM(tecLat, tecLng, asig.incidente.latitud, asig.incidente.longitud);
+  }
+
+  // Ruta óptima por calles (OSRM). Fallback a línea recta punteada si falla.
+  private async dibujarRutaOSRM(tecLat: number, tecLng: number, cliLat: number, cliLng: number): Promise<void> {
+    let puntos: L.LatLngExpression[] = [[tecLat, tecLng], [cliLat, cliLng]];
+    let punteada = true;
+    try {
+      const url = `https://router.project-osrm.org/route/v1/driving/${tecLng},${tecLat};${cliLng},${cliLat}?overview=full&geometries=geojson`;
+      const resp = await fetch(url);
+      if (resp.ok) {
+        const j: any = await resp.json();
+        const coords = j?.routes?.[0]?.geometry?.coordinates;
+        if (Array.isArray(coords) && coords.length) {
+          puntos = coords.map((c: number[]) => [c[1], c[0]] as L.LatLngExpression);
+          punteada = false;
+        }
+      }
+    } catch {
+      // Sin conexión a OSRM: queda la línea recta punteada.
+    }
+
+    if (!this.map) return;
+    if (this.rutaLayer) {
+      this.rutaLayer.remove();
+      this.rutaLayer = null;
+    }
+    this.rutaLayer = L.polyline(puntos, {
+      color: '#e67e22',
+      weight: 4,
+      opacity: 0.85,
+      dashArray: punteada ? '8, 8' : undefined,
+    }).addTo(this.map);
+    this.map.fitBounds(L.latLngBounds(puntos).pad(0.2), { padding: [40, 40] });
+  }
+
+  private iniciarPollingTecnico(): void {
+    if (this.pollId) return;
+    this.pollId = setInterval(() => this.actualizarPosTecnico(), 10000);
+  }
+
+  private actualizarPosTecnico(): void {
+    if (!this.map || this.asignacion()?.estado.nombre !== 'en_camino') return;
+    this.tallerService.obtenerTecnicos().subscribe({
+      next: (tec) => {
+        this.todosTecnicos.set(tec ?? []);
+        this.pintarTecnicoYRuta();
+      },
+      error: () => {},
+    });
+  }
+
+  private destruirMapa(): void {
+    if (this.pollId) {
+      clearInterval(this.pollId);
+      this.pollId = null;
+    }
+    if (this.map) {
+      this.map.off();
+      this.map.remove();
+      this.map = null;
+    }
+    this.tecnicoMarker = null;
+    this.rutaLayer = null;
   }
 
   llamarCliente(): void {
