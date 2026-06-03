@@ -14,9 +14,10 @@ import { takeUntil, finalize } from 'rxjs/operators';
   styleUrl: './admin-configuracion.component.scss'
 })
 export class AdminConfiguracionComponent implements OnInit, OnDestroy {
-  config: Pick<ConfiguracionGlobal, 'sla_penalizacion_pct' | 'sla_tolerancia_min'> = {
+  config: ConfiguracionGlobal = {
     sla_penalizacion_pct: 0,
     sla_tolerancia_min: 0,
+    comision_plataforma_pct: 0,
   };
 
   cargando = false;
@@ -50,6 +51,7 @@ export class AdminConfiguracionComponent implements OnInit, OnDestroy {
           this.config = {
             sla_penalizacion_pct: cfg.sla_penalizacion_pct ?? 0,
             sla_tolerancia_min: cfg.sla_tolerancia_min ?? 0,
+            comision_plataforma_pct: cfg.comision_plataforma_pct ?? 0,
           };
           this.cdr.markForCheck();
         },
@@ -60,6 +62,7 @@ export class AdminConfiguracionComponent implements OnInit, OnDestroy {
   guardar(): void {
     const pct = Number(this.config.sla_penalizacion_pct);
     const min = Number(this.config.sla_tolerancia_min);
+    const comision = Number(this.config.comision_plataforma_pct);
 
     if (!Number.isFinite(pct) || pct < 0 || pct > 100) {
       notificacion('El porcentaje debe estar entre 0 y 100', 'warning');
@@ -69,11 +72,16 @@ export class AdminConfiguracionComponent implements OnInit, OnDestroy {
       notificacion('La tolerancia debe estar entre 0 y 600 minutos', 'warning');
       return;
     }
+    if (!Number.isFinite(comision) || comision < 0 || comision > 100) {
+      notificacion('La comision debe estar entre 0 y 100', 'warning');
+      return;
+    }
 
     this.guardando = true;
-    const body: Partial<ConfiguracionGlobal> = {
+    const body: ConfiguracionGlobal = {
       sla_penalizacion_pct: pct,
       sla_tolerancia_min: min,
+      comision_plataforma_pct: comision,
     };
 
     this.adminService.actualizarConfiguracion(body)
@@ -86,6 +94,7 @@ export class AdminConfiguracionComponent implements OnInit, OnDestroy {
           this.config = {
             sla_penalizacion_pct: cfg.sla_penalizacion_pct ?? 0,
             sla_tolerancia_min: cfg.sla_tolerancia_min ?? 0,
+            comision_plataforma_pct: cfg.comision_plataforma_pct ?? 0,
           };
           notificacion('Configuracion actualizada', 'success');
           this.cdr.markForCheck();
