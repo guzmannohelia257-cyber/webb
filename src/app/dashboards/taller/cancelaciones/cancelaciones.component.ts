@@ -27,6 +27,7 @@ export class CancelacionesComponent implements OnInit {
     pct_cancel_pendiente: 0,
     pct_cancel_aceptada: 50,
     pct_cancel_en_camino: 100,
+    pct_penalizacion_sla: 0,
   };
   guardandoPct = false;
   msgPct: string | null = null;
@@ -67,6 +68,7 @@ export class CancelacionesComponent implements OnInit {
           pct_cancel_pendiente: t.pct_cancel_pendiente,
           pct_cancel_aceptada: t.pct_cancel_aceptada,
           pct_cancel_en_camino: t.pct_cancel_en_camino,
+          pct_penalizacion_sla: t.pct_penalizacion_sla ?? 0,
         };
         this.cdr.detectChanges();
       },
@@ -93,7 +95,12 @@ export class CancelacionesComponent implements OnInit {
 
   guardarPorcentajes(): void {
     const c = this.pctConfig;
-    if ([c.pct_cancel_pendiente, c.pct_cancel_aceptada, c.pct_cancel_en_camino].some(
+    if ([
+      c.pct_cancel_pendiente,
+      c.pct_cancel_aceptada,
+      c.pct_cancel_en_camino,
+      c.pct_penalizacion_sla ?? 0,
+    ].some(
       v => v < 0 || v > 100,
     )) {
       this.msgPct = 'Los porcentajes deben estar entre 0 y 100';
@@ -107,6 +114,7 @@ export class CancelacionesComponent implements OnInit {
           pct_cancel_pendiente: t.pct_cancel_pendiente,
           pct_cancel_aceptada: t.pct_cancel_aceptada,
           pct_cancel_en_camino: t.pct_cancel_en_camino,
+          pct_penalizacion_sla: t.pct_penalizacion_sla ?? 0,
         };
         this.msgPct = 'Porcentajes actualizados';
         this.guardandoPct = false;
