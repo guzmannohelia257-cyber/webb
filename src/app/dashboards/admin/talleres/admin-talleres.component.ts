@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AdminService, TallerAdmin, TallerAdminCreate, CategoriaAdmin } from '../../../shared/services/admin.service';
+import { AdminService, TallerAdmin, TallerAdminCreate, CategoriaAdmin, ConfiguracionGlobal } from '../../../shared/services/admin.service';
 import { notificacion } from '../../../shared/utils/notificacion.util';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
@@ -33,6 +33,10 @@ export class AdminTalleresComponent implements OnInit, OnDestroy {
   cargando = false;
   guardandoCategoria = false;
 
+  comisionPct: number = 0;
+  cargandoComision = false;
+  guardandoComision = false;
+
   private map?: L.Map;
   private marker?: L.Marker;
   private destroy$ = new Subject<void>();
@@ -48,6 +52,7 @@ export class AdminTalleresComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cargarTalleres();
     this.cargarCategorias();
+    this.cargarComision();
   }
 
   ngOnDestroy(): void {
@@ -98,6 +103,41 @@ export class AdminTalleresComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (cats) => { this.categorias = cats; this.cdr.markForCheck(); },
         error: () => notificacion('Error al cargar categorías', 'error'),
+      });
+  }
+
+  // Comision global de la plataforma
+
+  cargarComision(): void {
+    this.cargandoComision = true;
+    this.adminService.getConfiguracion()
+      .pipe(takeUntil(this.destroy$), finalize(() => { this.cargandoComision = false; this.cdr.markForCheck(); }))
+      .subscribe({
+        next: (cfg) => { this.comisionPct = cfg.comision_plataforma_pct ?? 0; this.cdr.markForCheck(); },
+        error: () => notificacion('Error al cargar la comision de la plataforma', 'error'),
+      });
+  }
+
+  guardarComision(): void {
+    const comision = Number(this.comisionPct);
+    if (!Number.isFinite(comision) || comision < 0 || comision > 100) {
+      notificacion('La comision debe estar entre 0 y 100', 'warning');
+      return;
+    }
+
+    this.guardandoComision = true;
+    this.adminService.actualizarConfiguracion({ comision_plataforma_pct: comision })
+      .pipe(takeUntil(this.destroy$), finalize(() => { this.guardandoComision = false; this.cdr.markForCheck(); }))
+      .subscribe({
+        next: (cfg) => {
+          this.comisionPct = cfg.comision_plataforma_pct ?? this.comisionPct;
+          notificacion('Comision actualizada', 'success');
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          const msg = err?.error?.detail ?? 'Error al guardar la comision';
+          notificacion(msg, 'error');
+        },
       });
   }
 

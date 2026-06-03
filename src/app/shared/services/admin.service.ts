@@ -228,8 +228,8 @@ export class AdminService {
     return this.httpService.get<ConfiguracionGlobal>(`${this.base}/configuracion`);
   }
 
-  /** Actualiza la configuracion global de la plataforma (SLA). */
-  actualizarConfiguracion(body: ConfiguracionGlobal): Observable<ConfiguracionGlobal> {
+  /** Actualiza la configuracion global de la plataforma (SLA, comision). */
+  actualizarConfiguracion(body: Partial<ConfiguracionGlobal>): Observable<ConfiguracionGlobal> {
     return this.httpService.patch<ConfiguracionGlobal>(`${this.base}/configuracion`, body);
   }
 

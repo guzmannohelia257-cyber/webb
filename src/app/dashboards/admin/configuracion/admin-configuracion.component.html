@@ -51,26 +51,6 @@
       </div>
     </div>
 
-    <div class="campo">
-      <label for="comision-pct">% de comision de la plataforma</label>
-      <p class="campo-hint">
-        Porcentaje que la plataforma retiene de cada servicio (lo que NO recibe
-        el taller). Valor entre 0 y 100.
-      </p>
-      <div class="input-row">
-        <input
-          id="comision-pct"
-          type="number"
-          [(ngModel)]="config.comision_plataforma_pct"
-          min="0"
-          max="100"
-          step="1"
-          [disabled]="cargando || guardando"
-        >
-        <span class="unidad">%</span>
-      </div>
-    </div>
-
     <div class="acciones">
       <button
         class="btn-primary"
