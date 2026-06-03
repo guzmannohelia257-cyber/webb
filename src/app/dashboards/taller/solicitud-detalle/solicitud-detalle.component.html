@@ -139,17 +139,17 @@
         <h3>💰 Cotización que vio el cliente</h3>
         <div class="row">
           <span class="label">Base de reparación:</span>
-          <span class="value">{{ cot.base_reparacion | currency:'USD' }}</span>
+          <span class="value">Bs {{ cot.base_reparacion | number:'1.2-2' }}</span>
         </div>
         <div class="row">
           <span class="label">
             Traslado@if (cot.distancia_km != null) { ({{ cot.distancia_km | number:'1.0-1' }} km) }:
           </span>
-          <span class="value">{{ cot.traslado | currency:'USD' }}</span>
+          <span class="value">Bs {{ cot.traslado | number:'1.2-2' }}</span>
         </div>
         <div class="row total">
           <span class="label">Total estimado:</span>
-          <span class="value"><strong>{{ cot.total | currency:'USD' }}</strong></span>
+          <span class="value"><strong>Bs {{ cot.total | number:'1.2-2' }}</strong></span>
         </div>
         @if (cot.tiempo_reparacion_min) {
           <div class="row">
