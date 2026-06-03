@@ -43,7 +43,7 @@
       } @else {
         <div class="stats-resumen">
           <div class="stat-card">
-            <div class="stat-value">{{ totalComisionMensual | currency }}</div>
+            <div class="stat-value">Bs {{ totalComisionMensual | number:'1.2-2' }}</div>
             <div class="stat-label">Comisión Total Año</div>
           </div>
           <div class="stat-card">
@@ -55,7 +55,7 @@
             <div class="stat-label">Total Servicios</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value">{{ (totalComisionMensual / gananciasMensual.length) | currency }}</div>
+            <div class="stat-value">Bs {{ (totalComisionMensual / gananciasMensual.length) | number:'1.2-2' }}</div>
             <div class="stat-label">Promedio Mensual</div>
           </div>
         </div>
@@ -81,8 +81,8 @@
                 <tr>
                   <td><strong>{{ ganancia.nombre_mes }}</strong></td>
                   <td class="centro">{{ ganancia.total_pagos }}</td>
-                  <td class="monto">{{ ganancia.monto_total_procesado | currency }}</td>
-                  <td class="monto">{{ ganancia.comision_plataforma | currency }}</td>
+                  <td class="monto">Bs {{ ganancia.monto_total_procesado | number:'1.2-2' }}</td>
+                  <td class="monto">Bs {{ ganancia.comision_plataforma | number:'1.2-2' }}</td>
                 </tr>
               }
             </tbody>
@@ -90,8 +90,8 @@
               <tr>
                 <td><strong>TOTAL</strong></td>
                 <td class="centro"><strong>{{ totalServiciosMensual }}</strong></td>
-                <td class="monto"><strong>{{ totalMontoProcesadoMensual | currency }}</strong></td>
-                <td class="monto"><strong>{{ totalComisionMensual | currency }}</strong></td>
+                <td class="monto"><strong>Bs {{ totalMontoProcesadoMensual | number:'1.2-2' }}</strong></td>
+                <td class="monto"><strong>Bs {{ totalComisionMensual | number:'1.2-2' }}</strong></td>
               </tr>
             </tfoot>
           </table>
@@ -143,7 +143,7 @@
       } @else {
         <div class="stats-resumen">
           <div class="stat-card">
-            <div class="stat-value">{{ totalComisionTaller | currency }}</div>
+            <div class="stat-value">Bs {{ totalComisionTaller | number:'1.2-2' }}</div>
             <div class="stat-label">Comisión Total</div>
           </div>
           <div class="stat-card">
@@ -177,7 +177,7 @@
                 <tr>
                   <td><strong>{{ ganancia.nombre_taller }}</strong></td>
                   <td>{{ ganancia.email }}</td>
-                  <td class="monto">{{ ganancia.comision_plataforma | currency }}</td>
+                  <td class="monto">Bs {{ ganancia.comision_plataforma | number:'1.2-2' }}</td>
                   <td class="centro">{{ ganancia.total_pagos }}</td>
                   <td>
                     @if (ganancia.promedio_estrellas != null) {
@@ -197,7 +197,7 @@
             <tfoot>
               <tr>
                 <td colspan="2"><strong>TOTAL</strong></td>
-                <td class="monto"><strong>{{ totalComisionTaller | currency }}</strong></td>
+                <td class="monto"><strong>Bs {{ totalComisionTaller | number:'1.2-2' }}</strong></td>
                 <td class="centro"><strong>{{ totalServiciosTaller }}</strong></td>
                 <td><strong>{{ promedioRating | number: '1.2-2' }}</strong></td>
                 <td></td>

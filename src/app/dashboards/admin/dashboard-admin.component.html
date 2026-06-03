@@ -26,7 +26,7 @@
               @if (statsLoading) {
                 <p class="stat-value">Cargando...</p>
               } @else if (stat.format === 'currency') {
-                <p class="stat-value">{{ stat.value | currency }}</p>
+                <p class="stat-value">Bs {{ stat.value | number:'1.2-2' }}</p>
               } @else {
                 <p class="stat-value">{{ stat.value | number: '1.0-0' }}</p>
               }

@@ -54,7 +54,7 @@
       <div>Cancelaciones</div>
     </div>
     <div class="kpi destacado">
-      <div class="big">${{ totalPendiente | number:'1.2-2' }}</div>
+      <div class="big">Bs {{ totalPendiente | number:'1.2-2' }}</div>
       <div>Pendiente de cobro</div>
     </div>
   </section>
@@ -85,7 +85,7 @@
               <td>{{ a.cancelada_at | date:'short' }}</td>
               <td class="motivo">{{ a.motivo_cancelacion }}</td>
               <td>
-                <strong>${{ a.compensacion_monto | number:'1.2-2' }}</strong>
+                <strong>Bs {{ a.compensacion_monto | number:'1.2-2' }}</strong>
               </td>
               <td>
                 @if (a.compensacion_pagada) {
@@ -93,7 +93,7 @@
                 } @else if (!a.compensacion_pagada && a.compensacion_monto) {
                   <span class="badge pending">Pendiente</span>
                 } @else {
-                  <span class="muted">$0</span>
+                  <span class="muted">Bs 0</span>
                 }
               </td>
             </tr>

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule, DecimalPipe, CurrencyPipe } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, GananciaMensualRow, GananciaTallerRow } from '../../../shared/services/admin.service';
 import { notificacion } from '../../../shared/utils/notificacion.util';
@@ -9,7 +9,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 @Component({
   selector: 'app-admin-ganancias',
   standalone: true,
-  imports: [CommonModule, FormsModule, DecimalPipe, CurrencyPipe],
+  imports: [CommonModule, FormsModule, DecimalPipe],
   templateUrl: './admin-ganancias.component.html',
   styleUrl: './admin-ganancias.component.scss'
 })

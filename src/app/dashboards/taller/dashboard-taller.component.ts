@@ -621,7 +621,7 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
   private formatearMoneda(valor: number): string {
     return new Intl.NumberFormat('es-MX', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'BOB',
       minimumFractionDigits: 2,
     }).format(valor);
   }
