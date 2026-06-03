@@ -17,11 +17,7 @@ export class CancelacionesComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   lista: AsignacionCancelada[] = [];
-  tarifaActual = 0;
-  nuevaTarifa = 0;
   cargando = true;
-  guardandoTarifa = false;
-  msgTarifa: string | null = null;
 
   pctConfig: TenantCancelacionConfig = {
     pct_cancel_pendiente: 0,
@@ -53,14 +49,6 @@ export class CancelacionesComponent implements OnInit {
       },
     });
 
-    this.svc.miTaller().subscribe({
-      next: (t) => {
-        this.tarifaActual = Number(t.tarifa_traslado);
-        this.nuevaTarifa = this.tarifaActual;
-        this.cdr.detectChanges();
-      },
-    });
-
     this.svc.miTenant().subscribe({
       next: (t) => {
         this.pctConfig = {
@@ -68,24 +56,6 @@ export class CancelacionesComponent implements OnInit {
           pct_cancel_aceptada: t.pct_cancel_aceptada,
           pct_cancel_en_camino: t.pct_cancel_en_camino,
         };
-        this.cdr.detectChanges();
-      },
-    });
-  }
-
-  guardarTarifa(): void {
-    this.guardandoTarifa = true;
-    this.msgTarifa = null;
-    this.svc.actualizarTarifa(this.nuevaTarifa).subscribe({
-      next: () => {
-        this.tarifaActual = this.nuevaTarifa;
-        this.msgTarifa = 'Tarifa actualizada';
-        this.guardandoTarifa = false;
-        this.cdr.detectChanges();
-      },
-      error: (e) => {
-        this.msgTarifa = e?.error?.detail ?? e?.message ?? 'Error';
-        this.guardandoTarifa = false;
         this.cdr.detectChanges();
       },
     });
