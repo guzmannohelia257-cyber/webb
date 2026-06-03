@@ -8,7 +8,7 @@ import { Chart, registerables } from 'chart.js';
 import { forkJoin, of, Subject } from 'rxjs';
 import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import {
-  AdminService, KpiResumenAdmin, TallerKpiRow, TallerRankingRow,
+  AdminService, KpiResumenAdmin, KpiZona, TallerKpiRow, TallerRankingRow,
 } from '../../../shared/services/admin.service';
 
 Chart.register(...registerables);
@@ -55,6 +55,9 @@ export class AdminKpisComponent implements OnInit, AfterViewInit, OnDestroy {
   resumen: KpiResumenAdmin | null = null;
   porTaller: TallerKpiRow[] = [];
   ranking: TallerRankingRow[] = [];
+
+  // Cache de direcciones por zona ("lat,lng" -> calle), resueltas con Nominatim.
+  zonaDir = new Map<string, string>();
 
   // Vistas dinamicas
   tipoChartCat: 'bar' | 'doughnut' = 'bar';
@@ -115,6 +118,7 @@ export class AdminKpisComponent implements OnInit, AfterViewInit, OnDestroy {
           this.cargando = false;
           this.cdr.detectChanges();
           setTimeout(() => this.renderCharts());
+          this.resolverDirecciones();
         })
       )
       .subscribe({
@@ -149,6 +153,46 @@ export class AdminKpisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   metricaLabel(m: MetricaComp): string {
     return this.metricas.find(x => x.val === m)?.label ?? m;
+  }
+
+  // Devuelve la calle/zona ya resuelta (o '' si aun no se resolvio o fallo).
+  direccionZona(z: KpiZona): string {
+    return this.zonaDir.get(`${z.lat},${z.lng}`) ?? '';
+  }
+
+  // Convierte el lat/lng de cada zona en una direccion legible (calle + barrio)
+  // con Nominatim (OSM). Secuencial y con pausa para respetar su limite de
+  // 1 req/seg. Si falla, la zona queda con su etiqueta "Zona N".
+  private async resolverDirecciones(): Promise<void> {
+    if (!this.resumen) return;
+    for (const z of this.resumen.zonas_mas_incidentes) {
+      const key = `${z.lat},${z.lng}`;
+      if (this.zonaDir.has(key)) continue;
+      try {
+        const url =
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2` +
+          `&lat=${z.lat}&lon=${z.lng}&zoom=17&addressdetails=1`;
+        const resp = await fetch(url, { headers: { Accept: 'application/json' } });
+        if (resp.ok) {
+          const j: any = await resp.json();
+          const a = j?.address ?? {};
+          const partes = [
+            a.road ?? a.pedestrian ?? a.neighbourhood,
+            a.suburb ?? a.city_district ?? a.city ?? a.town ?? a.village,
+          ].filter(Boolean);
+          const etiqueta = partes.length
+            ? partes.join(', ')
+            : (j?.display_name?.split(',').slice(0, 2).join(',').trim() ?? '');
+          this.zonaDir.set(key, etiqueta);
+        } else {
+          this.zonaDir.set(key, '');
+        }
+      } catch {
+        this.zonaDir.set(key, '');
+      }
+      this.cdr.markForCheck();
+      await new Promise((r) => setTimeout(r, 1100));
+    }
   }
 
   private renderCharts(): void {
