@@ -1,4 +1,4 @@
-export type EstadoNombre = 'pendiente' | 'aceptada' | 'en_camino' | 'completada' | 'rechazada';
+export type EstadoNombre = 'pendiente' | 'aceptada' | 'en_camino' | 'llegado' | 'completada' | 'rechazada';
 
 export interface EstadoAsignacion {
   id_estado_asignacion: number;

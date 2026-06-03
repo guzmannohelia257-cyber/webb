@@ -40,6 +40,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     'pendiente',
     'aceptada',
     'en_camino',
+    'llegado',
     'completada',
     'rechazada'
   ];
@@ -163,6 +164,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       pendiente: '⏳ Pendiente',
       aceptada: '✅ Aceptada',
       en_camino: '🚚 En camino',
+      llegado: '📍 Llegado',
       completada: '🏁 Completada',
       rechazada: '❌ Rechazada'
     };

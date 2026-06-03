@@ -294,6 +294,11 @@
     color: var(--cyan-ink);
     border-color: rgba(6, 182, 212, 0.32);
   }
+  &.badge-llegado {
+    background: var(--violet-soft);
+    color: var(--violet-ink);
+    border-color: rgba(139, 92, 246, 0.32);
+  }
   &.badge-completada {
     background: var(--violet-soft);
     color: var(--violet-ink);

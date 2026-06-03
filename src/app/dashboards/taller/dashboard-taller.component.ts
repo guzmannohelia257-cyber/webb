@@ -179,11 +179,12 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
       pendientes: this.asignacionesService.listar({ estado: 'pendiente' }).pipe(catchError(() => of([] as AsignacionTaller[]))),
       aceptadas: this.asignacionesService.listar({ estado: 'aceptada' }).pipe(catchError(() => of([] as AsignacionTaller[]))),
       enCamino: this.asignacionesService.listar({ estado: 'en_camino' }).pipe(catchError(() => of([] as AsignacionTaller[]))),
+      llegado: this.asignacionesService.listar({ estado: 'llegado' }).pipe(catchError(() => of([] as AsignacionTaller[]))),
       historialMes: this.asignacionesService.historial({ pagina: 1, porPagina: 100, desde: inicioMes, hasta: hoy }).pipe(catchError(() => of([] as AsignacionTaller[]))),
       tecnicos: this.tallerService.obtenerTecnicos().pipe(catchError(() => of([] as Tecnico[]))),
       evaluaciones: this.tallerService.obtenerEvaluaciones().pipe(catchError(() => of([] as EvaluacionResponse[]))),
     }).subscribe({
-      next: ({ pendientes, aceptadas, enCamino, historialMes, tecnicos, evaluaciones }) => {
+      next: ({ pendientes, aceptadas, enCamino, llegado, historialMes, tecnicos, evaluaciones }) => {
         this.solicitudesPendientes = pendientes;
         this.tecnicos = tecnicos;
         this.totalServiciosMes = historialMes.length;
@@ -203,7 +204,7 @@ export class DashboardTallerComponent implements OnInit, OnDestroy {
 
         this.stats = [
           { label: 'Solicitudes pendientes', value: String(pendientes.length), icon: '📋' },
-          { label: 'Trabajos activos', value: String(aceptadas.length + enCamino.length), icon: '⏳' },
+          { label: 'Trabajos activos', value: String(aceptadas.length + enCamino.length + llegado.length), icon: '⏳' },
           { label: 'Completadas este mes', value: String(historialMes.length), icon: '✅' },
           { label: 'Técnicos disponibles', value: String(tecnicosDisponibles), icon: '👨‍🔧' },
           { label: 'Promedio reseñas', value: promedioResenas === '—' ? '—' : `${promedioResenas}/5`, icon: '⭐' },

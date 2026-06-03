@@ -324,6 +324,7 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
       pendiente: '⏳ Pendiente',
       aceptada: '✅ Aceptada',
       en_camino: '🚚 En camino',
+      llegado: '📍 Llegado',
       completada: '🏁 Completada',
       rechazada: '❌ Rechazada'
     };
