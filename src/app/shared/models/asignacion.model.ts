@@ -42,6 +42,7 @@ export interface IncidenteAsignacion {
   vehiculo: VehiculoAsignacion;
   categoria?: CategoriaIncidente;
   prioridad?: PrioridadIncidente;
+  evidencias?: EvidenciaItem[];
 }
 
 export interface AsignacionTaller {
@@ -80,5 +81,23 @@ export interface IniciarViajeRequest {
 export interface CompletarAsignacionRequest {
   costo_estimado?: number;
   resumen_trabajo?: string;
+}
+
+export interface EvidenciaItem {
+  id_evidencia?: number;
+  id_tipo_evidencia: number;
+  url_archivo: string;
+  transcripcion_audio?: string | null;
+  descripcion_ia?: string | null;
+  created_at: string;
+}
+
+export interface CotizacionEstimada {
+  base_reparacion: number;
+  traslado: number;
+  total: number;
+  distancia_km: number | null;
+  tiempo_reparacion_min: number | null;
+  eta_minutos: number | null;
 }
 

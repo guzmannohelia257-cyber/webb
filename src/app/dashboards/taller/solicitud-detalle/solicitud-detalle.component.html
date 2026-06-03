@@ -41,6 +41,32 @@
       </p>
     </section>
 
+    @if (tecnicoAsignado(); as tec) {
+      <section class="card tecnico-card">
+        <h3>🔧 Técnico asignado</h3>
+        <div class="row">
+          <span class="label">Nombre:</span>
+          <span class="value">{{ tec.nombre }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Teléfono:</span>
+          <span class="value">
+            @if (tec.telefono) {
+              <a href="tel:{{ tec.telefono }}">{{ tec.telefono }}</a>
+            } @else { - }
+          </span>
+        </div>
+        <div class="row">
+          <span class="label">Disponibilidad:</span>
+          <span class="value">
+            <span class="badge" [class.badge-ok]="tec.disponible" [class.badge-busy]="!tec.disponible">
+              {{ tec.disponible ? 'Disponible' : 'Ocupado' }}
+            </span>
+          </span>
+        </div>
+      </section>
+    }
+
     <section class="card">
       <h3>👤 Cliente</h3>
       <div class="row">
@@ -107,6 +133,59 @@
         <span class="value">{{ a.incidente.resumen_ia || '-' }}</span>
       </div>
     </section>
+
+    @if (cotizacion(); as cot) {
+      <section class="card cotizacion-card">
+        <h3>💰 Cotización que vio el cliente</h3>
+        <div class="row">
+          <span class="label">Base de reparación:</span>
+          <span class="value">{{ cot.base_reparacion | currency:'USD' }}</span>
+        </div>
+        <div class="row">
+          <span class="label">
+            Traslado@if (cot.distancia_km != null) { ({{ cot.distancia_km | number:'1.0-1' }} km) }:
+          </span>
+          <span class="value">{{ cot.traslado | currency:'USD' }}</span>
+        </div>
+        <div class="row total">
+          <span class="label">Total estimado:</span>
+          <span class="value"><strong>{{ cot.total | currency:'USD' }}</strong></span>
+        </div>
+        @if (cot.tiempo_reparacion_min) {
+          <div class="row">
+            <span class="label">Tiempo de reparación:</span>
+            <span class="value">{{ cot.tiempo_reparacion_min }} min</span>
+          </div>
+        }
+      </section>
+    }
+
+    @if (a.incidente.evidencias && a.incidente.evidencias.length > 0) {
+      <section class="card evidencias-card">
+        <h3>📎 Evidencias del cliente ({{ a.incidente.evidencias.length }})</h3>
+        <div class="evidencias-grid">
+          @for (ev of a.incidente.evidencias; track ev.url_archivo) {
+            <div class="evidencia">
+              @if (esImagen(ev.url_archivo)) {
+                <a [href]="ev.url_archivo" target="_blank" rel="noopener">
+                  <img [src]="ev.url_archivo" alt="Evidencia del cliente" loading="lazy" />
+                </a>
+              } @else if (esAudio(ev.url_archivo)) {
+                <audio controls [src]="ev.url_archivo"></audio>
+              } @else {
+                <a [href]="ev.url_archivo" target="_blank" rel="noopener">📄 Ver archivo</a>
+              }
+              @if (ev.transcripcion_audio) {
+                <p class="ev-text"><em>"{{ ev.transcripcion_audio }}"</em></p>
+              }
+              @if (ev.descripcion_ia) {
+                <p class="ev-text">🤖 {{ ev.descripcion_ia }}</p>
+              }
+            </div>
+          }
+        </div>
+      </section>
+    }
 
     <section class="card">
       <h3>📍 Ubicación</h3>

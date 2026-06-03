@@ -7,7 +7,8 @@ import {
   AsignacionTaller,
   EstadoNombre,
   AceptarAsignacionBody,
-  RechazarAsignacionBody
+  RechazarAsignacionBody,
+  CotizacionEstimada
 } from '../models/asignacion.model';
 
 @Injectable({
@@ -144,6 +145,12 @@ export class AsignacionesService {
         });
         return throwError(() => err);
       })
+    );
+  }
+
+  getCotizacionEstimada(idAsignacion: number): Observable<CotizacionEstimada> {
+    return this.http.get<CotizacionEstimada>(
+      `/talleres/mi-taller/asignaciones/${idAsignacion}/cotizacion-estimada`
     );
   }
 }

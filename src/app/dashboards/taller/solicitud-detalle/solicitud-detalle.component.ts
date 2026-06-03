@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsignacionesService } from '../../../shared/services/asignaciones.service';
 import { TallerService, Tecnico } from '../../../shared/services/taller.service';
-import { AsignacionTaller, EstadoNombre, AceptarAsignacionBody } from '../../../shared/models/asignacion.model';
+import { AsignacionTaller, EstadoNombre, AceptarAsignacionBody, CotizacionEstimada } from '../../../shared/models/asignacion.model';
 import * as L from 'leaflet';
 
 @Component({
@@ -28,6 +28,10 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
 
   tecnicos = signal<Tecnico[]>([]);
   cargandoTecnicos = signal(false);
+
+  // Lista completa de tecnicos (sin filtrar por disponible) para resolver el asignado.
+  todosTecnicos = signal<Tecnico[]>([]);
+  cotizacion = signal<CotizacionEstimada | null>(null);
 
   map: L.Map | null = null;
 
@@ -81,6 +85,7 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
         console.log('[SolicitudDetalle] cargarAsignacion ← OK', { estado: data.estado.nombre });
         this.asignacion.set(data);
         this.cargando.set(false);
+        this.cargarExtras(data);
       },
       error: (err) => {
         console.error('[SolicitudDetalle] cargarAsignacion ← ERROR', err);
@@ -115,6 +120,36 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
         this.cargandoTecnicos.set(false);
       }
     });
+  }
+
+  private cargarExtras(data: AsignacionTaller): void {
+    // Cotizacion que vio el cliente (base de reparacion + traslado). Las
+    // evidencias ya vienen embebidas en data.incidente.evidencias.
+    this.asignacionesService.getCotizacionEstimada(data.id_asignacion).subscribe({
+      next: (c) => this.cotizacion.set(c),
+      error: () => this.cotizacion.set(null),
+    });
+    // Lista completa de tecnicos para resolver el asignado (puede no estar disponible).
+    if (data.id_usuario) {
+      this.tallerService.obtenerTecnicos().subscribe({
+        next: (tec) => this.todosTecnicos.set(tec ?? []),
+        error: () => this.todosTecnicos.set([]),
+      });
+    }
+  }
+
+  tecnicoAsignado(): Tecnico | null {
+    const asig = this.asignacion();
+    if (!asig?.id_usuario) return null;
+    return this.todosTecnicos().find(t => t.id_usuario === asig.id_usuario) ?? null;
+  }
+
+  esImagen(url: string): boolean {
+    return /\.(png|jpe?g|gif|webp|bmp|svg)(\?|$)/i.test(url);
+  }
+
+  esAudio(url: string): boolean {
+    return /\.(mp3|wav|ogg|m4a|aac|webm)(\?|$)/i.test(url);
   }
 
   abrirModalRechazar(): void {
