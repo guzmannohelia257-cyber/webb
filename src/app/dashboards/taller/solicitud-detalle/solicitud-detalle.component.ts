@@ -377,7 +377,7 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
 
   private iniciarPollingTecnico(): void {
     if (this.pollId) return;
-    this.pollId = setInterval(() => this.actualizarPosTecnico(), 10000);
+    this.pollId = setInterval(() => this.actualizarPosTecnico(), 6000);
   }
 
   private actualizarPosTecnico(): void {
