@@ -1,0 +1,64 @@
+<div class="admin-configuracion">
+  <div class="section-header">
+    <h2>Configuracion global</h2>
+    <button class="btn-secondary" (click)="cargar()" [disabled]="cargando">
+      {{ cargando ? 'Cargando...' : 'Refrescar' }}
+    </button>
+  </div>
+
+  <p class="hint">
+    Parametros globales de la plataforma aplicados a todos los talleres.
+  </p>
+
+  <div class="config-card">
+    <div class="campo">
+      <label for="sla-pct">% de penalizacion por retraso (SLA)</label>
+      <p class="campo-hint">
+        Porcentaje que se descuenta al taller cuando supera el tiempo de servicio
+        acordado. Valor entre 0 y 100.
+      </p>
+      <div class="input-row">
+        <input
+          id="sla-pct"
+          type="number"
+          [(ngModel)]="config.sla_penalizacion_pct"
+          min="0"
+          max="100"
+          step="1"
+          [disabled]="cargando || guardando"
+        >
+        <span class="unidad">%</span>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="sla-min">Minutos de tolerancia</label>
+      <p class="campo-hint">
+        Margen de tiempo antes de aplicar la penalizacion por retraso.
+        Valor entre 0 y 600 minutos.
+      </p>
+      <div class="input-row">
+        <input
+          id="sla-min"
+          type="number"
+          [(ngModel)]="config.sla_tolerancia_min"
+          min="0"
+          max="600"
+          step="1"
+          [disabled]="cargando || guardando"
+        >
+        <span class="unidad">min</span>
+      </div>
+    </div>
+
+    <div class="acciones">
+      <button
+        class="btn-primary"
+        (click)="guardar()"
+        [disabled]="cargando || guardando"
+      >
+        {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+    </div>
+  </div>
+</div>

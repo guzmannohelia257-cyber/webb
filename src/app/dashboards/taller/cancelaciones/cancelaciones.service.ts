@@ -16,7 +16,6 @@ export interface TenantCancelacionConfig {
   pct_cancel_pendiente: number;
   pct_cancel_aceptada: number;
   pct_cancel_en_camino: number;
-  pct_penalizacion_sla?: number;
 }
 
 @Injectable({ providedIn: 'root' })

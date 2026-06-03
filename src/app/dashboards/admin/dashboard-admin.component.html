@@ -80,5 +80,25 @@
       </nav>
       <app-admin-servicios></app-admin-servicios>
     }
+
+    <!-- Vista configuracion -->
+    @if (vistaActual === 'configuracion') {
+      <nav class="nav-volver">
+        <button (click)="irAInicio()" class="btn-volver">
+          ← Volver al inicio
+        </button>
+      </nav>
+      <app-admin-configuracion></app-admin-configuracion>
+    }
+
+    <!-- Vista KPIs / Analitica -->
+    @if (vistaActual === 'kpis') {
+      <nav class="nav-volver">
+        <button (click)="irAInicio()" class="btn-volver">
+          ← Volver al inicio
+        </button>
+      </nav>
+      <app-admin-kpis></app-admin-kpis>
+    }
   </main>
 </div>
