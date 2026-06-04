@@ -154,6 +154,26 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard/taller/solicitudes', asignacion.id_asignacion]);
   }
 
+  /**
+   * El chat taller<->cliente esta disponible desde 'pendiente' hasta 'llegado'.
+   * Al completar/rechazar/cancelar el boton desaparece.
+   */
+  private readonly estadosConChat: EstadoNombre[] = [
+    'pendiente',
+    'aceptada',
+    'en_camino',
+    'llegado',
+  ];
+
+  puedeMensajear(estado: EstadoNombre): boolean {
+    return this.estadosConChat.includes(estado);
+  }
+
+  abrirMensajes(idIncidente: number, evt: Event): void {
+    evt.stopPropagation(); // no abrir el detalle de la tarjeta
+    this.router.navigate(['/dashboard/taller/mensajes', idIncidente]);
+  }
+
   volver(): void {
     this.router.navigate(['/dashboard/taller']);
   }
