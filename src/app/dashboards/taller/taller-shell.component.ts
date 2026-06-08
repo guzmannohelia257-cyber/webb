@@ -5,12 +5,13 @@ import { Subscription, interval, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../../shared/services/auth.service';
 import { ConnectionBadgeComponent } from '../../shared/components/connection-badge.component';
+import { InstallPwaButtonComponent } from '../../shared/components/install-pwa-button.component';
 import { NotificacionService, Notificacion } from '../../shared/services/notificacion.service';
 
 @Component({
   selector: 'app-taller-shell',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, ConnectionBadgeComponent],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, ConnectionBadgeComponent, InstallPwaButtonComponent],
   templateUrl: './taller-shell.component.html',
   styleUrl: './taller-shell.component.scss',
 })

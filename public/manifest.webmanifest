@@ -1,17 +1,29 @@
 {
-  "name": "Yary — Panel del Taller",
-  "short_name": "Yary",
+  "name": "Autorescate — Panel del Taller",
+  "short_name": "Autorescate",
   "theme_color": "#dc3545",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
-  "description": "Panel de gestión de talleres mecánicos — Yary",
+  "description": "Panel de gestión de talleres mecánicos — Autorescate",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "64x64 48x48 32x32 16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

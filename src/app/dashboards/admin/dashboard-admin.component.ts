@@ -11,11 +11,12 @@ import { AdminGananciasComponent } from './ganancias/admin-ganancias.component';
 import { AdminServiciosComponent } from './servicios/admin-servicios.component';
 import { AdminConfiguracionComponent } from './configuracion/admin-configuracion.component';
 import { AdminKpisComponent } from './kpis/admin-kpis.component';
+import { InstallPwaButtonComponent } from '../../shared/components/install-pwa-button.component';
 
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
-  imports: [CommonModule, AdminTalleresComponent, AdminGananciasComponent, AdminServiciosComponent, AdminConfiguracionComponent, AdminKpisComponent],
+  imports: [CommonModule, AdminTalleresComponent, AdminGananciasComponent, AdminServiciosComponent, AdminConfiguracionComponent, AdminKpisComponent, InstallPwaButtonComponent],
   templateUrl: './dashboard-admin.component.html',
   styleUrl: './dashboard-admin.component.scss'
 })
