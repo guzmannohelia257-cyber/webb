@@ -197,7 +197,22 @@
         <button class="btn btn-secondary" (click)="abrirGoogleMaps()">
           🔗 Abrir en Google Maps
         </button>
+        @if (a.id_usuario && a.estado.nombre !== 'completada' && a.estado.nombre !== 'rechazada') {
+          <button class="btn btn-secondary" (click)="compartirUbicacion()" [disabled]="compartiendo()">
+            {{ compartiendo() ? '⏳ Generando…' : '📡 Compartir ubicación' }}
+          </button>
+        }
       </div>
+      @if (linkCompartir()) {
+        <div class="share-link">
+          <input type="text" [value]="linkCompartir()" readonly
+                 (focus)="$any($event.target).select()" />
+          <button class="btn btn-secondary" (click)="copiarLink()">
+            {{ copiado() ? '✅ Copiado' : '📋 Copiar' }}
+          </button>
+          <small>Cualquiera con este enlace verá la ubicación en vivo hasta que el servicio finalice.</small>
+        </div>
+      }
       @if (mostrarMapa()) {
         <div class="map-container">
           <div #mapContainer class="map"></div>

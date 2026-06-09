@@ -29,6 +29,11 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
   tecnicos = signal<Tecnico[]>([]);
   cargandoTecnicos = signal(false);
 
+  // Link público de seguimiento en vivo para compartir con un tercero.
+  linkCompartir = signal<string | null>(null);
+  compartiendo = signal(false);
+  copiado = signal(false);
+
   // Lista completa de tecnicos (sin filtrar por disponible) para resolver el asignado.
   todosTecnicos = signal<Tecnico[]>([]);
   cotizacion = signal<CotizacionEstimada | null>(null);
@@ -239,6 +244,41 @@ export class SolicitudDetalleComponent implements OnInit, OnDestroy, AfterViewIn
     if (!asig) return;
     const { latitud, longitud } = asig.incidente;
     window.open(`https://www.google.com/maps?q=${latitud},${longitud}`, '_blank');
+  }
+
+  // Genera el link público de seguimiento y lo copia al portapapeles.
+  compartirUbicacion(): void {
+    const asig = this.asignacion();
+    if (!asig || this.compartiendo()) return;
+
+    this.compartiendo.set(true);
+    this.error.set(null);
+    this.asignacionesService.compartir(asig.id_asignacion).subscribe({
+      next: ({ token }) => {
+        this.linkCompartir.set(`${window.location.origin}/track/${token}`);
+        this.compartiendo.set(false);
+        this.copiarLink();
+      },
+      error: (err) => {
+        console.error('[SolicitudDetalle] compartirUbicacion ← ERROR', err);
+        this.error.set(err?.error?.detail || err?.message || 'No se pudo generar el enlace');
+        this.compartiendo.set(false);
+      },
+    });
+  }
+
+  copiarLink(): void {
+    const url = this.linkCompartir();
+    if (!url) return;
+    navigator.clipboard?.writeText(url).then(
+      () => {
+        this.copiado.set(true);
+        setTimeout(() => this.copiado.set(false), 2500);
+      },
+      () => {
+        // Sin permiso de portapapeles: el usuario puede copiar manualmente.
+      }
+    );
   }
 
   toggleMapa(): void {

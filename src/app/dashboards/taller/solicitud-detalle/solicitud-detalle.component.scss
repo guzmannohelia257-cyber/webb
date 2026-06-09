@@ -485,6 +485,34 @@
 }
 
 // ===== MAP =====
+.share-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+
+  input {
+    flex: 1;
+    min-width: 220px;
+    padding: 10px 12px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #f7f7f9;
+    color: #333;
+  }
+
+  .btn {
+    flex: 0 0 auto;
+  }
+
+  small {
+    flex-basis: 100%;
+    color: #777;
+  }
+}
+
 .location-actions {
   display: flex;
   gap: 10px;

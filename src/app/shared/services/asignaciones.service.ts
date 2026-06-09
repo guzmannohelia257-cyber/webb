@@ -153,4 +153,16 @@ export class AsignacionesService {
       `/talleres/mi-taller/asignaciones/${idAsignacion}/cotizacion-estimada`
     );
   }
+
+  /**
+   * Genera (o recupera) el token del link público de seguimiento en vivo para
+   * compartir la ubicación del técnico/cliente con un tercero. El link sirve
+   * hasta que la asignación se cierre.
+   */
+  compartir(idAsignacion: number): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(
+      `/asignaciones/${idAsignacion}/compartir`,
+      {}
+    );
+  }
 }

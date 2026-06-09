@@ -63,6 +63,13 @@ export const routes: Routes = [
     component: UnauthorizedComponent
   },
   {
+    // Página PÚBLICA de seguimiento en vivo (link compartido a un tercero).
+    // Fuera de /dashboard: no pasa por authGuard ni requiere sesión.
+    path: 'track/:token',
+    loadComponent: () =>
+      import('./public/track/public-track.component').then(m => m.PublicTrackComponent)
+  },
+  {
     path: '**',
     redirectTo: '/login'
   }
