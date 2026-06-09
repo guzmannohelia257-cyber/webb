@@ -11,18 +11,19 @@ import { AdminGananciasComponent } from './ganancias/admin-ganancias.component';
 import { AdminServiciosComponent } from './servicios/admin-servicios.component';
 import { AdminConfiguracionComponent } from './configuracion/admin-configuracion.component';
 import { AdminKpisComponent } from './kpis/admin-kpis.component';
+import { AdminReportesComponent } from './reportes/admin-reportes.component';
 import { InstallPwaButtonComponent } from '../../shared/components/install-pwa-button.component';
 
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
-  imports: [CommonModule, AdminTalleresComponent, AdminGananciasComponent, AdminServiciosComponent, AdminConfiguracionComponent, AdminKpisComponent, InstallPwaButtonComponent],
+  imports: [CommonModule, AdminTalleresComponent, AdminGananciasComponent, AdminServiciosComponent, AdminConfiguracionComponent, AdminKpisComponent, AdminReportesComponent, InstallPwaButtonComponent],
   templateUrl: './dashboard-admin.component.html',
   styleUrl: './dashboard-admin.component.scss'
 })
 export class DashboardAdminComponent implements OnInit {
   currentUser: User | null = null;
-  vistaActual: 'inicio' | 'talleres' | 'ganancias' | 'servicios' | 'configuracion' | 'kpis' = 'inicio';
+  vistaActual: 'inicio' | 'talleres' | 'ganancias' | 'servicios' | 'configuracion' | 'kpis' | 'reportes' = 'inicio';
   statsLoading = false;
 
   stats = [
@@ -37,6 +38,7 @@ export class DashboardAdminComponent implements OnInit {
     { icon: '🔧', label: 'Gestionar Servicios', action: 'servicios' },
     { icon: '📊', label: 'Reporte de Ganancias', action: 'ganancias' },
     { icon: '📈', label: 'KPIs / Analitica', action: 'kpis' },
+    { icon: '🗣️', label: 'Asistente de Reportes', action: 'reportes' },
     { icon: '⚙️', label: 'Configuracion', action: 'configuracion' },
   ];
 
@@ -102,12 +104,13 @@ export class DashboardAdminComponent implements OnInit {
 
   handleAction(action: string): void {
     console.log('[DashboardAdmin] handleAction →', { action, vistaActual: this.vistaActual });
-    const mapa: Record<string, 'talleres' | 'ganancias' | 'servicios' | 'configuracion' | 'kpis'> = {
+    const mapa: Record<string, 'talleres' | 'ganancias' | 'servicios' | 'configuracion' | 'kpis' | 'reportes'> = {
       talleres: 'talleres',
       ganancias: 'ganancias',
       servicios: 'servicios',
       configuracion: 'configuracion',
       kpis: 'kpis',
+      reportes: 'reportes',
       workshops: 'talleres',
       reports: 'ganancias',
     };

@@ -101,5 +101,15 @@
       </nav>
       <app-admin-kpis></app-admin-kpis>
     }
+
+    <!-- Vista Asistente de Reportes (lenguaje natural) -->
+    @if (vistaActual === 'reportes') {
+      <nav class="nav-volver">
+        <button (click)="irAInicio()" class="btn-volver">
+          ← Volver al inicio
+        </button>
+      </nav>
+      <app-admin-reportes></app-admin-reportes>
+    }
   </main>
 </div>
