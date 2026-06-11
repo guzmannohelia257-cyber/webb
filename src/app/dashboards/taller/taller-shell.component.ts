@@ -7,6 +7,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { ConnectionBadgeComponent } from '../../shared/components/connection-badge.component';
 import { InstallPwaButtonComponent } from '../../shared/components/install-pwa-button.component';
 import { NotificacionService, Notificacion } from '../../shared/services/notificacion.service';
+import { RealtimeService } from '../../shared/services/realtime.service';
 
 @Component({
   selector: 'app-taller-shell',
@@ -26,6 +27,7 @@ export class TallerShellComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private notifService: NotificacionService,
+    private rt: RealtimeService,
     private cdr: ChangeDetectorRef,
     private router: Router,
   ) {}
@@ -33,6 +35,15 @@ export class TallerShellComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cargarNotificaciones();
     this.notifService.initFirebase();
+
+    // Si el WS se cayó (Render duerme el server gratis, timeout, etc.),
+    // reconectarlo al entrar al panel para volver a recibir 'incidente.nuevo'
+    // y que las tarjetas en vivo del taller aparezcan.
+    const token = this.authService.getToken();
+    if (token && this.rt.state$.value === 'disconnected') {
+      this.rt.connect(token);
+    }
+
     this._notifSub = interval(30_000)
       .pipe(switchMap(() => this.notifService.getMisNotificaciones().pipe(catchError(() => of([] as Notificacion[])))))
       .subscribe(data => {

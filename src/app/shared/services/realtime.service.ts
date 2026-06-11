@@ -28,6 +28,17 @@ export class RealtimeService implements OnDestroy {
   readonly state$ = new BehaviorSubject<ConnectionState>('disconnected');
 
   connect(token: string): void {
+    // Idempotente: si ya hay una conexión activa (o en curso) con el mismo
+    // token, no abrir otro socket. Evita conexiones duplicadas cuando connect()
+    // se llama desde varios sitios (APP_INITIALIZER, login y restaurar sesión).
+    if (
+      this.token === token &&
+      this.ws &&
+      (this.ws.readyState === WebSocket.OPEN ||
+        this.ws.readyState === WebSocket.CONNECTING)
+    ) {
+      return;
+    }
     this.token = token;
     this.disposed = false;
     this._connect();

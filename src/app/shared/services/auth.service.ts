@@ -78,6 +78,11 @@ export class AuthService {
       const user = this.getStoredUser();
       if (user) this.currentUser$.next(user);
     }
+
+    // Al restaurar la sesión (recargar página / reabrir pestaña) reconectar el
+    // WebSocket: en login ya se conecta, pero tras un F5 nadie lo hacía y el
+    // panel del taller dejaba de recibir 'incidente.nuevo' (tarjetas en vivo).
+    this.rt.connect(token);
   }
 
   loginTaller(email: string, password: string): Observable<LoginTallerResponse> {
